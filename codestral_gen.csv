@@ -1,0 +1,1578 @@
+,identifier,language,code,label
+0,codestral_gen_0,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+1,codestral_gen_1,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+2,codestral_gen_2,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+3,codestral_gen_3,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+4,codestral_gen_4,java,"java
+String query = ""UPDATE users SET name = '"" + name + ""', email = '"" + email + ""' WHERE id = "" + id;
+statement.executeUpdate(query);
+",bad
+5,codestral_gen_5,java,"java
+String query = ""UPDATE users SET name = ?, email = ? WHERE id = ?"";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, name);
+statement.setString(2, email);
+statement.setInt(3, id);
+statement.executeUpdate();
+",good
+6,codestral_gen_6,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+7,codestral_gen_7,java,"sql
+UPDATE profiles SET name = 'Malicious User', email = 'malicious@user.com' WHERE id = 1; DROP TABLE profiles; --
+",good
+8,codestral_gen_8,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+9,codestral_gen_9,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+10,codestral_gen_10,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.update(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+11,codestral_gen_11,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+12,codestral_gen_12,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+13,codestral_gen_13,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+14,codestral_gen_14,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+15,codestral_gen_15,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+16,codestral_gen_16,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+17,codestral_gen_17,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+18,codestral_gen_18,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+19,codestral_gen_19,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+20,codestral_gen_20,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+21,codestral_gen_21,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+22,codestral_gen_22,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+23,codestral_gen_23,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+24,codestral_gen_24,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+25,codestral_gen_25,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+26,codestral_gen_26,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+27,codestral_gen_27,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+28,codestral_gen_28,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+29,codestral_gen_29,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+30,codestral_gen_30,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + newEmail + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+31,codestral_gen_31,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+32,codestral_gen_32,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+33,codestral_gen_33,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+34,codestral_gen_34,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+35,codestral_gen_35,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+36,codestral_gen_36,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody UserProfile userProfile) {
+    String query = ""UPDATE user_profiles SET name = '"" + userProfile.getName() + ""', email = '"" + userProfile.getEmail() + ""' WHERE id = "" + userProfile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+37,codestral_gen_37,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody UserProfile userProfile) {
+    String query = ""UPDATE user_profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, userProfile.getName(), userProfile.getEmail(), userProfile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+38,codestral_gen_38,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+39,codestral_gen_39,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+40,codestral_gen_40,java,"java
+public void updateProfile(String userId, String newName) {
+    String query = ""UPDATE users SET name = '"" + newName + ""' WHERE user_id = "" + userId;
+    // execute the query
+}
+",bad
+41,codestral_gen_41,java,"java
+public void updateProfile(String userId, String newName) {
+    String query = ""UPDATE users SET name = ? WHERE user_id = ?"";
+    PreparedStatement statement = connection.prepareStatement(query);
+    statement.setString(1, newName);
+    statement.setString(2, userId);
+    statement.executeUpdate();
+}
+",good
+42,codestral_gen_42,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+43,codestral_gen_43,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+44,codestral_gen_44,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody EmailRequest request) {
+    String email = request.getEmail();
+    String userId = request.getUserId();
+
+    String sql = ""UPDATE Users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+45,codestral_gen_45,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody EmailRequest request) {
+    String email = request.getEmail();
+    String userId = request.getUserId();
+
+    String sql = ""UPDATE Users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+46,codestral_gen_46,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+47,codestral_gen_47,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+48,codestral_gen_48,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody Map<String, String> emailData) {
+    String newEmail = emailData.get(""newEmail"");
+    String userId = emailData.get(""userId"");
+
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+49,codestral_gen_49,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody Map<String, String> emailData) {
+    String newEmail = emailData.get(""newEmail"");
+    String userId = emailData.get(""userId"");
+
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+50,codestral_gen_50,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+51,codestral_gen_51,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+52,codestral_gen_52,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String email) {
+    String query = ""UPDATE users SET email = '"" + email + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+53,codestral_gen_53,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String email) {
+    String query = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+54,codestral_gen_54,java,"java
+@PostMapping(""/login"")
+public ResponseEntity<String> login(@RequestBody User user) {
+    String query = ""SELECT * FROM users WHERE username = '"" + user.getUsername() + ""' AND password = '"" + user.getPassword() + ""'"";
+    // Execute the query...
+}
+",bad
+55,codestral_gen_55,java,"java
+@PostMapping(""/login"")
+public ResponseEntity<String> login(@RequestBody User user) {
+    String query = ""SELECT * FROM users WHERE username = ? AND password = ?"";
+    // Use a PreparedStatement to set the parameters...
+}
+",good
+56,codestral_gen_56,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + newEmail + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+57,codestral_gen_57,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+58,codestral_gen_58,java,"java
+String query = ""UPDATE users SET name = '"" + name + ""', email = '"" + email + ""' WHERE id = "" + id;
+statement.executeUpdate(query);
+",bad
+59,codestral_gen_59,java,"java
+PreparedStatement statement = connection.prepareStatement(""UPDATE users SET name = ?, email = ? WHERE id = ?"");
+statement.setString(1, name);
+statement.setString(2, email);
+statement.setInt(3, id);
+statement.executeUpdate();
+",good
+60,codestral_gen_60,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String email) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+61,codestral_gen_61,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String email) {
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+62,codestral_gen_62,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+63,codestral_gen_63,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+64,codestral_gen_64,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+65,codestral_gen_65,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+66,codestral_gen_66,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+67,codestral_gen_67,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+68,codestral_gen_68,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE Users SET email = '"" + newEmail + ""' WHERE userId = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+69,codestral_gen_69,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE Users SET email = ? WHERE userId = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+70,codestral_gen_70,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+71,codestral_gen_71,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+72,codestral_gen_72,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+73,codestral_gen_73,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+74,codestral_gen_74,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+75,codestral_gen_75,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+76,codestral_gen_76,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+77,codestral_gen_77,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+78,codestral_gen_78,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.update(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+79,codestral_gen_79,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+80,codestral_gen_80,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+81,codestral_gen_81,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+82,codestral_gen_82,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+83,codestral_gen_83,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+84,codestral_gen_84,java,"java
+public void updateProfile(String userId, String newName) {
+    String query = ""UPDATE users SET name = '"" + newName + ""' WHERE user_id = "" + userId;
+    try (Statement stmt = conn.createStatement()) {
+        stmt.executeUpdate(query);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+",bad
+85,codestral_gen_85,java,"java
+public void updateProfile(String userId, String newName) {
+    String query = ""UPDATE users SET name = ? WHERE user_id = ?"";
+    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setString(1, newName);
+        pstmt.setString(2, userId);
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+",good
+86,codestral_gen_86,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+87,codestral_gen_87,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+88,codestral_gen_88,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+89,codestral_gen_89,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+90,codestral_gen_90,java,"java
+@PostMapping(""/updateEmail"")
+public String updateEmail(@RequestParam(""email"") String email, @RequestParam(""userId"") String userId) {
+    String sql = ""UPDATE Users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ""Email updated successfully"";
+}
+",bad
+91,codestral_gen_91,java,"sql
+UPDATE Users SET email = 'attacker@example.com'; DROP TABLE Users; --' WHERE user_id = 1
+",good
+92,codestral_gen_92,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+93,codestral_gen_93,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+94,codestral_gen_94,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody EmailUpdateRequest request) {
+    String query = ""UPDATE users SET email = '"" + request.getEmail() + ""' WHERE username = '"" + request.getUsername() + ""'"";
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+95,codestral_gen_95,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody EmailUpdateRequest request) {
+    String query = ""UPDATE users SET email = ? WHERE username = ?"";
+    jdbcTemplate.update(query, request.getEmail(), request.getUsername());
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+96,codestral_gen_96,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+97,codestral_gen_97,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+98,codestral_gen_98,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+99,codestral_gen_99,java,"sql
+UPDATE profiles SET name = 'Malicious User', email = 'malicious@user.com' WHERE id = 1; DROP TABLE profiles; --
+",good
+100,codestral_gen_100,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+101,codestral_gen_101,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+102,codestral_gen_102,java,"java
+String query = ""SELECT * FROM users WHERE username = '"" + username + ""' AND password = '"" + password + ""'"";
+",bad
+103,codestral_gen_103,java,"java
+String query = ""SELECT * FROM users WHERE username = ? AND password = ?"";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, username);
+statement.setString(2, password);
+",good
+104,codestral_gen_104,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE userId = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+105,codestral_gen_105,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE userId = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+106,codestral_gen_106,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+107,codestral_gen_107,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+108,codestral_gen_108,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.update(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+109,codestral_gen_109,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+110,codestral_gen_110,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody UserProfile userProfile) {
+    String query = ""UPDATE user_profiles SET name = '"" + userProfile.getName() + ""', email = '""
+                    + userProfile.getEmail() + ""' WHERE user_id = "" + userProfile.getUserId();
+    jdbcTemplate.update(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+111,codestral_gen_111,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody UserProfile userProfile) {
+    String query = ""UPDATE user_profiles SET name = ?, email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, userProfile.getName(), userProfile.getEmail(), userProfile.getUserId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+112,codestral_gen_112,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+113,codestral_gen_113,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+114,codestral_gen_114,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+115,codestral_gen_115,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+116,codestral_gen_116,java,"java
+String query = ""SELECT * FROM books WHERE title = '"" + bookTitle + ""'"";
+PreparedStatement statement = connection.prepareStatement(query);
+ResultSet resultSet = statement.executeQuery();
+",bad
+117,codestral_gen_117,java,"java
+String query = ""SELECT * FROM books WHERE title = ?"";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, bookTitle);
+ResultSet resultSet = statement.executeQuery();
+",good
+118,codestral_gen_118,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+119,codestral_gen_119,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+120,codestral_gen_120,java,"java
+String userInput = request.getParameter(""username"");
+String newEmail = request.getParameter(""email"");
+String query = ""UPDATE users SET email = '"" + newEmail + ""' WHERE username = '"" + userInput + ""';"";
+statement.executeUpdate(query);
+",bad
+121,codestral_gen_121,java,"java
+String userInput = request.getParameter(""username"");
+String newEmail = request.getParameter(""email"");
+PreparedStatement preparedStatement = connection.prepareStatement(""UPDATE users SET email = ? WHERE username = ?"");
+preparedStatement.setString(1, newEmail);
+preparedStatement.setString(2, userInput);
+preparedStatement.executeUpdate();
+",good
+122,codestral_gen_122,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+123,codestral_gen_123,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+124,codestral_gen_124,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+125,codestral_gen_125,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+126,codestral_gen_126,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+127,codestral_gen_127,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+128,codestral_gen_128,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+129,codestral_gen_129,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+130,codestral_gen_130,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET firstName = '"" + profile.getFirstName() + ""', lastName = '""
+                    + profile.getLastName() + ""', email = '"" + profile.getEmail() + ""' WHERE userId = ""
+                    + profile.getUserId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+131,codestral_gen_131,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET firstName = ?, lastName = ?, email = ? WHERE userId = ?"";
+    jdbcTemplate.update(query, profile.getFirstName(), profile.getLastName(), profile.getEmail(), profile.getUserId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+132,codestral_gen_132,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+133,codestral_gen_133,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+134,codestral_gen_134,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody EmailUpdateRequest request) {
+    String query = ""UPDATE users SET email = '"" + request.getNewEmail() + ""' WHERE username = '"" + request.getUsername() + ""'"";
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+135,codestral_gen_135,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody EmailUpdateRequest request) {
+    String query = ""UPDATE users SET email = ? WHERE username = ?"";
+    jdbcTemplate.update(query, request.getNewEmail(), request.getUsername());
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+136,codestral_gen_136,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+137,codestral_gen_137,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+138,codestral_gen_138,java,"java
+@PostMapping(""/login"")
+public String login(@RequestParam(""username"") String username, @RequestParam(""password"") String password) {
+    String query = ""SELECT * FROM users WHERE username = '"" + username + ""' AND password = '"" + password + ""'"";
+    // execute the query
+}
+",bad
+139,codestral_gen_139,java,"java
+@PostMapping(""/login"")
+public String login(@RequestParam(""username"") String username, @RequestParam(""password"") String password) {
+    String query = ""SELECT * FROM users WHERE username = ? AND password = ?"";
+    // use a prepared statement to execute the query with the username and password as parameters
+}
+",good
+140,codestral_gen_140,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE Users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+141,codestral_gen_141,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE Users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+142,codestral_gen_142,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+143,codestral_gen_143,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+144,codestral_gen_144,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody User user) {
+    String query = ""UPDATE users SET name = '"" + user.getName() + ""', email = '"" + user.getEmail() + ""' WHERE id = "" + user.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+145,codestral_gen_145,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody User user) {
+    String query = ""UPDATE users SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, user.getName(), user.getEmail(), user.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+146,codestral_gen_146,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '""
+                   + profile.getEmail() + ""' WHERE user_id = "" + profile.getUserId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+147,codestral_gen_147,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getUserId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+148,codestral_gen_148,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE userId = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+149,codestral_gen_149,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE userId = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+150,codestral_gen_150,java,"java
+String query = ""SELECT * FROM users WHERE username = '"" + username + ""' AND password = '"" + password + ""'"";
+",bad
+151,codestral_gen_151,java,"java
+String query = ""SELECT * FROM users WHERE username = ? AND password = ?"";
+PreparedStatement stmt = conn.prepareStatement(query);
+stmt.setString(1, username);
+stmt.setString(2, password);
+",good
+152,codestral_gen_152,java,"java
+@PostMapping(""/updateProfile"")
+public String updateProfile(@RequestParam(""username"") String username, @RequestParam(""email"") String email) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE username = '"" + username + ""'"";
+    jdbcTemplate.update(sql);
+    return ""Profile updated successfully"";
+}
+",bad
+153,codestral_gen_153,java,"java
+@PostMapping(""/updateProfile"")
+public String updateProfile(@RequestParam(""username"") String username, @RequestParam(""email"") String email) {
+    String sql = ""UPDATE users SET email = ? WHERE username = ?"";
+    jdbcTemplate.update(sql, email, username);
+    return ""Profile updated successfully"";
+}
+",good
+154,codestral_gen_154,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+155,codestral_gen_155,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+156,codestral_gen_156,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+157,codestral_gen_157,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+158,codestral_gen_158,java,"java
+String query = ""UPDATE users SET name = '"" + name + ""', email = '"" + email + ""' WHERE id = "" + id;
+statement.executeUpdate(query);
+",bad
+159,codestral_gen_159,java,"java
+String query = ""UPDATE users SET name = ?, email = ? WHERE id = ?"";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, name);
+statement.setString(2, email);
+statement.setInt(3, id);
+statement.executeUpdate();
+",good
+160,codestral_gen_160,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+161,codestral_gen_161,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+162,codestral_gen_162,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+163,codestral_gen_163,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+164,codestral_gen_164,java,"java
+@PostMapping(""/updateEmail"")
+public String updateEmail(@RequestParam(""newEmail"") String newEmail, @RequestParam(""userId"") String userId) {
+    String query = ""UPDATE users SET email = '"" + newEmail + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ""Email updated successfully"";
+}
+",bad
+165,codestral_gen_165,java,"java
+@PostMapping(""/updateEmail"")
+public String updateEmail(@RequestParam(""newEmail"") String newEmail, @RequestParam(""userId"") String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, newEmail, userId);
+    return ""Email updated successfully"";
+}
+",good
+166,codestral_gen_166,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+167,codestral_gen_167,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+168,codestral_gen_168,java,"java
+@PostMapping(""/login"")
+public ResponseEntity<String> login(@RequestBody User user) {
+    String query = ""SELECT * FROM users WHERE username = '"" + user.getUsername() + ""' AND password = '"" + user.getPassword() + ""'"";
+    // Execute the query...
+}
+",bad
+169,codestral_gen_169,java,"java
+@PostMapping(""/login"")
+public ResponseEntity<String> login(@RequestBody User user) {
+    String query = ""SELECT * FROM users WHERE username = ? AND password = ?"";
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getPassword());
+        // Execute the query...
+    } catch (SQLException e) {
+        // Handle exception...
+    }
+}
+",good
+170,codestral_gen_170,java,"java
+@PostMapping(""/update-email"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.update(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+171,codestral_gen_171,java,"java
+@PostMapping(""/update-email"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+172,codestral_gen_172,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = '"" + email + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+173,codestral_gen_173,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String email, @RequestParam String userId) {
+    String query = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(query, email, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+174,codestral_gen_174,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+175,codestral_gen_175,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+176,codestral_gen_176,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+177,codestral_gen_177,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+178,codestral_gen_178,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+179,codestral_gen_179,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+180,codestral_gen_180,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+181,codestral_gen_181,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+182,codestral_gen_182,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody UserProfile profile) {
+    String query = ""UPDATE UserProfiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+183,codestral_gen_183,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody UserProfile profile) {
+    String query = ""UPDATE UserProfiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+184,codestral_gen_184,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+185,codestral_gen_185,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+186,codestral_gen_186,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+187,codestral_gen_187,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+188,codestral_gen_188,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+189,codestral_gen_189,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+190,codestral_gen_190,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE userId = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+191,codestral_gen_191,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestBody String newEmail) {
+    String sql = ""UPDATE users SET email = ? WHERE userId = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+192,codestral_gen_192,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = '"" + newEmail + ""' WHERE user_id = "" + userId;
+    jdbcTemplate.execute(sql);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",bad
+193,codestral_gen_193,java,"java
+@PostMapping(""/updateEmail"")
+public ResponseEntity<String> updateEmail(@RequestParam String newEmail, @RequestParam String userId) {
+    String sql = ""UPDATE users SET email = ? WHERE user_id = ?"";
+    jdbcTemplate.update(sql, newEmail, userId);
+    return ResponseEntity.ok(""Email updated successfully"");
+}
+",good
+194,codestral_gen_194,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+195,codestral_gen_195,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+196,codestral_gen_196,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET firstName = '"" + profile.getFirstName() + ""', lastName = '""
+            + profile.getLastName() + ""', email = '"" + profile.getEmail() + ""' WHERE userId = "" + profile.getUserId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+197,codestral_gen_197,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET firstName = ?, lastName = ?, email = ? WHERE userId = ?"";
+    jdbcTemplate.update(query, profile.getFirstName(), profile.getLastName(), profile.getEmail(), profile.getUserId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good
+198,codestral_gen_198,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = '"" + profile.getName() + ""', email = '"" + profile.getEmail() + ""' WHERE id = "" + profile.getId();
+    jdbcTemplate.execute(query);
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",bad
+199,codestral_gen_199,java,"java
+@PostMapping(""/updateProfile"")
+public ResponseEntity<String> updateProfile(@RequestBody Profile profile) {
+    String query = ""UPDATE profiles SET name = ?, email = ? WHERE id = ?"";
+    jdbcTemplate.update(query, profile.getName(), profile.getEmail(), profile.getId());
+    return ResponseEntity.ok(""Profile updated successfully"");
+}
+",good

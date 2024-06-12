@@ -1,0 +1,2219 @@
+,identifier,language,code,label
+0,commits,java,"String sql = String.format(""insert into %s (timestamp, %s) values (%d, %s)"",
+    deviceId, field, timestamp, value + """");
+statement.execute(sql);
+",bad
+1,commits,good,"String sql = ""insert into ? (timestamp, ?) values (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(sql);
+preparedStatement.setString(1, deviceId);
+preparedStatement.setString(2, field);
+preparedStatement.setLong(3, timestamp);
+preparedStatement.setInt(4, value);
+preparedStatement.executeUpdate();
+",good
+2,commits,java,"String userquery = String.format(""SELECT %s FROM %s"", username, tablename);
+",bad
+3,commits,good,"String userquery = String.format(""SELECT %s FROM %s WHERE 1=1"", username, tablename);
+",good
+4,commits,java,"String query = ""SELECT * FROM book"";
+// ...
+query += "";"";
+// ...
+PreparedStatement stmt = conn.prepareStatement(query);
+",bad
+5,commits,good,"String query = ""SELECT * FROM book WHERE id = ?"";
+PreparedStatement stmt = conn.prepareStatement(query);
+stmt.setInt(1, Integer.parseInt(id));
+",good
+6,commits,java,"stmt.execute(""SELECT * FROM economy ORDER BY balance DESC limit 10;"");
+",bad
+7,commits,good,"PreparedStatement pstmt = db.prepareStatement(""SELECT * FROM economy ORDER BY balance DESC limit ?;"");
+pstmt.setInt(1, 10);
+pstmt.execute();
+",good
+8,commits,java,"sqLiteDatabase.delete(ReportsTableConsts.TABLE_NAME,
+                ReportsTableConsts.UUID_COLUMN + ""='"" + reportUuid + ""'"", null);
+",bad
+9,commits,good,"sqLiteDatabase.delete(ReportsTableConsts.TABLE_NAME,
+                ReportsTableConsts.UUID_COLUMN + ""=?"", new String[]{reportUuid});
+",good
+10,commits,java,"List<User> list = userManager.findByCondition("" where qq_openid = '""+openId+""' "").getResultlist();
+",bad
+11,commits,good,"List<User> list = userManager.findByCondition("" where qq_openid = ? "", openId).getResultlist();
+",good
+12,commits,java,"Map<String, String> regexReplacementMap = new HashMap<>();
+regexReplacementMap.put("".*"", ""'; DROP TABLE users; --"");
+String filteredStmt = MySqlUtils.filterStmtByRegex(""SELECT * FROM users WHERE id = 1"", regexReplacementMap, endpoint, ""users"");
+",bad
+13,commits,java,"String query = ""insert into comments(movieId, userId, comment) values ("" + comment.getMovieId() + "", "" + comment.getUserId() + "", '"" + comment.getComment() + ""')"";
+",bad
+14,commits,good,"public void create(Comment comment) {
+    String query = ""insert into comments(movieId, userId, comment) values (?, ?, ?)"";
+
+    try (Connection connection = dataSource.getConnection();
+         PreparedStatement statement = connection.prepareStatement(query);
+    ) {
+        statement.setInt(1, comment.getMovieId());
+        statement.setInt(2, comment.getUserId());
+        statement.setString(3, comment.getComment());
+        statement.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+",good
+15,commits,java,"Query query = entityManager.createNativeQuery(""SELECT * FROM carts_tx  WHERE customerId = :customerId"", CartEntity.class);
+query.setParameter(""customerId"", customerId);
+",bad
+16,commits,good,"TypedQuery<CartEntity> query = entityManager.createQuery(""SELECT c FROM CartEntity c WHERE c.customerId = :customerId"", CartEntity.class);
+query.setParameter(""customerId"", customerId);
+",good
+17,commits,java,"final String query = String.format(""SELECT * FROM %s WHERE %s = '%s' AND %s = '%s'; "",
+                DatabaseHelper.ACCOUNTS_TABLE,
+                DatabaseHelper.USERNAME_COL, username,
+                DatabaseHelper.PASSWORD_COL, Authentication.SHA256(password));
+",bad
+18,commits,good,"final String query = ""SELECT * FROM "" + DatabaseHelper.ACCOUNTS_TABLE + "" WHERE "" + DatabaseHelper.USERNAME_COL + "" = ? AND "" + DatabaseHelper.PASSWORD_COL + "" = ?"";
+try (DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
+     SQLiteDatabase db = dbHelper.getReadableDatabase();
+     Cursor cursor = db.rawQuery(query, new String[]{username, Authentication.SHA256(password)})) {
+    if (cursor.moveToFirst()) {
+        saveSessionInfo(cursor.getString(cursor.getColumnIndex(DatabaseHelper.USERNAME_COL)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.BALANCE_COL)));
+        return true;
+    }
+} catch (SQLiteException e) {
+    Log.e(TAG, e.getMessage());
+}
+",good
+19,commits,java,"private void parseFilters(StringBuilder select, QueryDataSource d, Set<String> tags) {
+    select.append("" where `period` <= ? and `period` >= ?"");
+    List<Object> params = new ArrayList<>();
+    params.add(d.end);
+    params.add(d.start);
+    if (!CollectionUtils.isEmpty(d.filters)) {
+        for (QueryFilter filter : d.filters) {
+            if (!tags.contains(filter.name)) {
+                continue;
+            }
+            switch (filter.type) {
+                case ""literal_or"":
+                    select.append("" and `"").append(filter.name).append(""` in ("");
+                    String[] values = filter.value.split(""\\|"");
+                    for (int i = 0; i < values.length; i++) {
+                        if (i > 0) {
+                            select.append("","");
+                        }
+                        select.append(""?"");
+                        params.add(values[i]);
+                    }
+                    select.append("")"");
+                    break;
+                // ... other cases ...
+            }
+        }
+    }
+    // Execute the query with the parameters
+    // ...
+}
+",bad
+20,commits,java,"String createTable = cachedResultsConfiguration.getParameters().get(""CREATE_TABLE"");
+createTable = createTable.replace(TABLE, tableName);
+s.execute(createTable);
+
+String insert = cachedResultsConfiguration.getParameters().get(""INSERT"");
+insert = insert.replace(TABLE, tableName);
+ps = con.prepareStatement(insert);
+
+String dropTable = cachedResultsConfiguration.getParameters().get(""DROP_TABLE"");
+dropTable = dropTable.replace(TABLE, tableName);
+s.execute(dropTable);
+
+String dropView = cachedResultsConfiguration.getParameters().get(""DROP_VIEW"");
+dropView = dropView.replace(TABLE, viewName);
+s.execute(dropView);
+",bad
+21,commits,good,"String createTable = ""CREATE TABLE "" + tableName + "" (...)"";
+try (Statement s = con.createStatement()) {
+    s.execute(createTable);
+}
+
+String insert = ""INSERT INTO "" + tableName + "" (...) VALUES (?)"";
+try (PreparedStatement ps = con.prepareStatement(insert)) {
+    // set parameters here
+    ps.executeUpdate();
+}
+
+String dropTable = ""DROP TABLE "" + tableName;
+try (Statement s = con.createStatement()) {
+    s.execute(dropTable);
+}
+
+String dropView = ""DROP VIEW "" + viewName;
+try (Statement s = con.createStatement()) {
+    s.execute(dropView);
+}
+",good
+22,commits,java,"String query = ""SELECT * FROM users WHERE username = '"" + user + ""';"";
+",bad
+23,commits,good,"String query = ""SELECT * FROM users WHERE username = ?"";
+PreparedStatement stmt = con.prepareStatement(query);
+stmt.setString(1, user);
+stmt.executeQuery();
+",good
+24,commits,java,"criteria.setAddress(criteria.getAddress().replace(""'"", """"));
+",bad
+25,commits,good,"String sql = ""SELECT p.* FROM property p "" +
+             ""WHERE p.is_deleted = false "" +
+             ""AND p.user_id <> ? "" +
+             ""AND p.is_available = true "";
+
+List<Object> params = new ArrayList<>();
+params.add(userId);
+
+if (!criteria.getAddress().isEmpty()) {
+    sql += ""AND LOWER(p.address) LIKE LOWER(?) "";
+    params.add(""%"" + criteria.getAddress() + ""%"");
+}
+// Continue this pattern for all other criteria
+
+return jdbcTemplate.query(sql, params.toArray(), new PropertyMapper());
+",good
+26,commits,java,"String query = ""INSERT INTO events VALUES ("" + logEntry.getEventID() + "", "" + ""'""
+        + logEntry.getTimestampAsString() + ""', "" + ""'"" + logEntry.getStreamName() + ""', "" + ""'""
+        + logEntry.getEvent() + ""', "" + logEntry.getUserID() + "", "" + logEntry.getStartedAt() + "", ""
+        + logEntry.getEndedAt() + "","" + ""'"" + logEntry.getWayfAttr() + ""'"" + "");"";
+",bad
+27,commits,good,"private synchronized void logEventInDB(StreamingStatLogEntry logEntry) {
+    try {
+        logEntry.setEventID(getNextEventID());
+        String query = ""INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?)"";
+        PreparedStatement stmt = dbConnection.prepareStatement(query);
+        stmt.setLong(1, logEntry.getEventID());
+        stmt.setTimestamp(2, new Timestamp(logEntry.getTimestamp().getTime()));
+        stmt.setString(3, logEntry.getStreamName());
+        stmt.setString(4, logEntry.getEvent().toString());
+        stmt.setInt(5, logEntry.getUserID());
+        stmt.setLong(6, logEntry.getStartedAt());
+        stmt.setLong(7, logEntry.getEndedAt());
+        stmt.setString(8, logEntry.getWayfAttr());
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        logger.error(""An SQL exception occurred during onConnect call. Connection was: "" + dbConnection.toString(), e);
+    }
+}
+",good
+28,commits,java,"try ( PreparedStatement statement = connection.prepareStatement( STATEMENT.toString() ) )
+",bad
+29,commits,good,"try ( PreparedStatement statement = connection.prepareStatement( STATEMENT.toString() ) ) {
+    for (int i = 0; i < values.length; i++) {
+        statement.setObject(i + 1, values[i]);
+    }
+}
+",good
+30,commits,java,"sb.append(""( co."").append(field).append("" LIKE '"").append(value).append(""') "").append(search_habit).append(' ');
+",bad
+31,commits,good,"sb.append(""( co."").append(field).append("" LIKE ?) "").append(search_habit).append(' ');
+injectors.add(new StringSQLInjector(value));
+",good
+32,commits,java,"statement = con.prepareStatement(""select item_id,name,bless from etcitem where name Like '%"" + name + ""%'"");
+",bad
+33,commits,good,"statement = con.prepareStatement(""select item_id,name,bless from etcitem where name Like ?"");
+statement.setString(1, ""%"" + name + ""%"");
+",good
+34,commits,java,"ResultSet rs = db.query(""SELECT * FROM companiondb.owningAbilitiesView WHERE idcharacter = "" + characterid + "";"");
+",bad
+35,commits,good,"ResultSet rs = db.query(""SELECT * FROM companiondb.owningAbilitiesView WHERE idcharacter = ?;"");
+PreparedStatement stmt = db.getPreparedStatement(query);
+stmt.setInt(1, characterid);
+ResultSet rs = stmt.executeQuery();
+",good
+36,commits,java,"String sql = String.format(""SELECT * FROM USER WHERE EMAIL=\""%s\"";"", email);
+",bad
+37,commits,good,"String sql = ""SELECT * FROM USER WHERE EMAIL=?"";
+PreparedStatement st = conn.prepareStatement(sql);
+st.setString(1, email);
+ResultSet rs = st.executeQuery();
+",good
+38,commits,java,"sql = ""INSERT INTO "" + player.getName() + "" (country) VALUES ('"" + arguments[0] + ""')"";
+",bad
+39,commits,good,"PreparedStatement statement = connection.prepareStatement(""INSERT INTO "" + player.getName() + "" (country) VALUES (?)"");
+statement.setString(1, arguments[0]);
+statement.executeUpdate();
+",good
+40,commits,java,"sql = SQL_SELECT_NAME + feedids + SQL_FEED_ID + SQL_SELECT_COUNT + feedids + SQL_TYPE_PUB
+    + SQL_SELECT_SUM + feedids + SQL_PUBLISH_LENGTH + SQL_SUBSCRIBER_URL
+    + SQL_SUB_ID + SQL_DELIVERY_TIME + SQL_AVERAGE_DELAY + SQL_JOIN_RECORDS
+    + feedids + "") "" + subid + SQL_STATUS_204 + "" and e.event_time>="" + compareTime + SQL_GROUP_SUB_ID;
+",bad
+41,commits,good,"String sql = SQL_SELECT_NAME + ""? "" + SQL_FEED_ID + SQL_SELECT_COUNT + ""? "" + SQL_TYPE_PUB
+    + SQL_SELECT_SUM + ""? "" + SQL_PUBLISH_LENGTH + SQL_SUBSCRIBER_URL
+    + SQL_SUB_ID + SQL_DELIVERY_TIME + SQL_AVERAGE_DELAY + SQL_JOIN_RECORDS
+    + ""? "" + "") "" + subid + SQL_STATUS_204 + "" and e.event_time>=? "" + SQL_GROUP_SUB_ID;
+
+try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    ps.setString(1, feedids);
+    ps.setString(2, feedids);
+    ps.setString(3, feedids);
+    ps.setString(4, feedids);
+    ps.setLong(5, compareTime);
+    try (ResultSet rs = ps.executeQuery()) {
+        // ...
+    }
+}
+",good
+42,commits,java,"String where = "" role='"" + role + ""' "";
+",bad
+43,commits,good,"String where = "" role=? "";
+// ...
+jt.query(sqlFetchRows + where, new Object[]{role}, PERMISSION_ROW_MAPPER);
+",good
+44,commits,java,"Query query = em1.createQuery(""SELECT q FROM GfQuestion q WHERE q.contents = '"" + contents + ""'"");
+",bad
+45,commits,good,"Query query = em1.createQuery(""SELECT q FROM GfQuestion q WHERE q.contents = :contents"");
+query.setParameter(""contents"", contents);
+",good
+46,commits,java,"String query = ""select username from users where location = "" + args[0] + "";"";
+",bad
+47,commits,good,"String query = ""select username from users where location = ?"";
+preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, args[0]);
+",good
+48,commits,java,"PreparedStatement preparedStatement = connection.prepareStatement(""SELECT user_rank FROM users WHERE uid = "" + userID.trim());
+",bad
+49,commits,good,"PreparedStatement preparedStatement = connection.prepareStatement(""SELECT user_rank FROM users WHERE uid = ?"");
+preparedStatement.setString(1, userID.trim());
+",good
+50,commits,java,"public ResultSet query(String query) {
+    checkConnection();
+    try {
+        return query(conn.prepareStatement(query));
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+",bad
+51,commits,good,"// Instead of taking a raw query string, take the query and parameters separately
+public ResultSet query(String query, Object... params) {
+    checkConnection();
+    try (PreparedStatement statement = conn.prepareStatement(query)) {
+        for (int i = 0; i < params.length; i++) {
+            statement.setObject(i + 1, params[i]);
+        }
+        return statement.executeQuery();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+",good
+52,commits,java,"String query = String.format(""SELECT * FROM diary WHERE diary_id = %d"", index);
+",bad
+53,commits,good,"@Override
+public Diary get(Integer index) {
+    Diary diary = null;
+    String query = ""SELECT * FROM diary WHERE diary_id = ?"";
+    try (PreparedStatement statement = database.prepareStatement(query)) {
+        statement.setInt(1, index);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            // rest of the code
+        }
+    } catch (Exception e) {
+        // handle exception
+    }
+    return diary;
+}
+",good
+54,commits,java,"String searchquery=""select * from ""+DATABASE_TABLE+"" where username ='""+loginUsername+""' and password='""+loginpass+""';"";
+",bad
+55,commits,good,"String searchquery=""select * from ""+DATABASE_TABLE+"" where username =? and password=?;"";
+Cursor cursor=db.rawQuery(searchquery,new String[]{loginUsername, loginpass});
+",good
+56,commits,java,"Cursor cursor = db.query(TABLE_NAME, null, COLUMN_NAME + "" = '"" + name + ""'"", null, null, null, null);
+",bad
+57,commits,good,"Cursor cursor = db.query(TABLE_NAME, null, COLUMN_NAME + "" = ?"", new String[]{name}, null, null, null);
+",good
+58,commits,java,"public void clearExceptionFromDb(String exceptionId) {
+    SQLiteDatabase sqLiteDatabase = SqliteDbHelper.getWriteableDatabaseInstance(context);
+    sqLiteDatabase.delete(ExceptionsLogTableConsts.TABLE_NAME,
+            ExceptionsLogTableConsts.ID_COLUMN + ""=?"", new String[]{exceptionId});
+}
+",bad
+59,commits,java,"String q = query.replace(""where"", sb.toString());
+",bad
+60,commits,good,"String q = query.replaceFirst(""(?i)where"", sb.toString());
+",good
+61,commits,java,"sql.append(String.format("" AND o.id=%s "", StringEscapeUtils.escapeSql(criteria.getId())));
+",bad
+62,commits,good,"sql.append("" AND o.id=:id"");
+query.setParameter(""id"", criteria.getId());
+",good
+63,commits,java,"String SQL = ""INSERT INTO "" + super.getTable() + "" (UserId, Action, CreatedAt)""
+                    + "" VALUES('"" + audit.getUserId() + ""','"" + audit.getAction() + ""','"" + Instant.now().toString() + ""')"";
+",bad
+64,commits,good,"String SQL = ""INSERT INTO "" + super.getTable() + "" (UserId, Action, CreatedAt) VALUES(?, ?, ?)"";
+try (PreparedStatement stmt = con.prepareStatement(SQL)) {
+    stmt.setString(1, audit.getUserId());
+    stmt.setString(2, audit.getAction());
+    stmt.setString(3, Instant.now().toString());
+    stmt.execute();
+}
+",good
+65,commits,java,"String sql = ""select * from pengembalian WHERE kode_pengembalian LIKE '%""+carii+""%'OR judul_buku LIKE '""+carii+""'"";
+",bad
+66,commits,good,"String sql = ""select * from pengembalian WHERE kode_pengembalian LIKE ? OR judul_buku LIKE ?"";
+PreparedStatement stmt = pkk.koneksi.konek().prepareStatement(sql);
+stmt.setString(1, ""%"" + carii + ""%"");
+stmt.setString(2, ""%"" + carii + ""%"");
+ResultSet cari = stmt.executeQuery();
+",good
+67,commits,java,"try (PreparedStatement queryStatement = connection.prepareStatement(jobIdByNameQuery)) {
+  int limit = query.getLimit();
+  if (limit > 0) {
+    queryStatement.setMaxRows(limit);
+  }
+  queryStatement.setString(1, jobName);
+  try (ResultSet rs = queryStatement.executeQuery()) {
+    while (rs.next()) {
+      jobIds.add(rs.getString(1));
+    }
+  }
+}
+",bad
+68,commits,java,"TypedQuery<CartEntity> query = entityManager.createQuery(
+    ""SELECT c FROM CartEntity c WHERE c.customerId = '"" + customerId + ""'"", CartEntity.class);
+List<CartEntity> cart = query.getResultList();
+",bad
+69,commits,good,"TypedQuery<CartEntity> query = entityManager.createQuery(
+    ""SELECT c FROM CartEntity c WHERE c.customerId = :customerId"", CartEntity.class);
+query.setParameter(""customerId"", customerId);
+List<CartEntity> cart = query.getResultList();
+",good
+70,commits,java,"String qs = ""SELECT COUNT(*) FROM ?"";
+if (table != null) {
+    qs += "" WHERE ? = ?"";
+}
+SQLiteStatement stmt = db.compileStatement(qs);
+stmt.bindString(1, REPORTS_TABLE);
+if (table != null) {
+    stmt.bindString(2, KEY_TABLE);
+    stmt.bindString(3, table.name);
+}
+",bad
+71,commits,good,"String qs = ""SELECT COUNT(*) FROM "" + REPORTS_TABLE;
+if (table != null) {
+    qs += "" WHERE "" + KEY_TABLE + "" = ?"";
+}
+SQLiteStatement stmt = db.compileStatement(qs);
+if (table != null) {
+    stmt.bindString(1, table.name);
+}
+",good
+72,commits,java,"Query query = em1.createQuery(""SELECT u FROM User u WHERE u.id_user = '"" + id + ""'"");
+",bad
+73,commits,good,"Query query = em1.createQuery(""SELECT u FROM User u WHERE u.id_user = :id"").setParameter(""id"", id);
+",good
+74,commits,java,"stmt.executeQuery(""SELECT * FROM USER WHERE userName='""+userName+""' AND password='""+pass+""'"");
+",bad
+75,commits,good,"PreparedStatement pstmt = conn.prepareStatement(""SELECT * FROM USER WHERE userName = ? AND password = ?"");
+pstmt.setString(1, userName);
+pstmt.setString(2, pass);
+ResultSet rs = pstmt.executeQuery();
+",good
+76,commits,java,"private Prefix getMySqlPrefix(String uuid) throws Exception {
+    PreparedStatement stmt = this.mySQL.getConnection().prepareStatement(""SELECT `prefix`, `active`, `blocked` , `modification` FROM `prefixplayer` WHERE `uuid`=?;"");
+    stmt.setString(1, uuid);
+    ResultSet rs = stmt.executeQuery();
+
+    if(!rs.first()) {
+        return null;
+    }
+
+    return new Prefix(uuid, rs.getString(""prefix""), rs.getBoolean(""active""),rs.getBoolean(""blocked""), rs.getInt(""modification""));
+}
+",bad
+77,commits,java,"String where = "" username='"" + username + ""' "";
+",bad
+78,commits,good,"String where = "" username=? "";
+List<String> params = new ArrayList<>();
+params.add(username);
+",good
+79,commits,java,"String cmd = GET_TABLES_AND_VIEWS.replace(""?"", schema);
+crs.setCommand(cmd);
+",bad
+80,commits,good,"String cmd = GET_TABLES_AND_VIEWS.replace(""?"", ""?"");
+try (PreparedStatement ps = connection.prepareStatement(cmd)) {
+    ps.setString(1, schema);
+    crs.populate(ps);
+}
+",good
+81,commits,java,"String sql = ""select * from peminjaman WHERE kode_peminjaman LIKE '%""+carii+""%'OR judul_buku LIKE '""+carii+""'"";
+",bad
+82,commits,good,"String sql = ""select * from peminjaman WHERE kode_peminjaman LIKE ? OR judul_buku LIKE ?"";
+PreparedStatement statement = pkk.koneksi.konek().prepareStatement(sql);
+statement.setString(1, ""%"" + carii + ""%"");
+statement.setString(2, ""%"" + carii + ""%"");
+ResultSet cari = statement.executeQuery();
+",good
+83,commits,java,"String sql = ""SELECT * FROM petugas WHERE username = '""+username+""'"";
+",bad
+84,commits,good,"String sql = ""SELECT * FROM petugas WHERE username = ?"";
+PreparedStatement statement = koneksi.konek().prepareStatement(sql);
+statement.setString(1, username);
+ResultSet rows = statement.executeQuery();
+",good
+85,commits,java,"stmnt.addFilter(col + "" = '"" + o.toString() + ""'"");
+",bad
+86,commits,good,"stmnt.addFilter(col + "" = ?"");
+dbQuery.setObject(1, o);
+",good
+87,commits,java,"final ResultSet resultSet = statement.executeQuery(""SELECT * FROM students WHERE name = '"" + name + ""'"");
+",bad
+88,commits,good,"try (final PreparedStatement preparedStatement = connection.prepareStatement(""SELECT * FROM students WHERE name = ?"")) {
+    preparedStatement.setString(1, name);
+    final ResultSet resultSet = preparedStatement.executeQuery();
+    // rest of the code
+}
+",good
+89,commits,java,"return db.rawQuery(""SELECT "" + TABLE_NAME + "".*, "" +
+				CategoriesInterface.TABLE_NAME + ""."" + CategoriesInterface.COLUMN_COLOR +
+				"" FROM "" + TABLE_NAME +
+				"" INNER JOIN "" + ItemDataInterface.TABLE_NAME +
+				"" ON "" + TABLE_NAME + ""."" + COLUMN_ID_DATA + "" = "" +
+				ItemDataInterface.TABLE_NAME + ""."" + ItemDataInterface.COLUMN_ID +
+				"" INNER JOIN "" + CategoriesInterface.TABLE_NAME +
+				"" ON "" + ItemDataInterface.TABLE_NAME + ""."" + ItemDataInterface.COLUMN_ID_CATEGORY + "" = "" +
+				CategoriesInterface.TABLE_NAME + ""."" + CategoriesInterface.COLUMN_ID +
+				"" WHERE "" + COLUMN_NAME + "" LIKE '%"" + substring + ""%'"", null);
+",bad
+90,commits,good,"return db.rawQuery(""SELECT "" + TABLE_NAME + "".*, "" +
+				CategoriesInterface.TABLE_NAME + ""."" + CategoriesInterface.COLUMN_COLOR +
+				"" FROM "" + TABLE_NAME +
+				"" INNER JOIN "" + ItemDataInterface.TABLE_NAME +
+				"" ON "" + TABLE_NAME + ""."" + COLUMN_ID_DATA + "" = "" +
+				ItemDataInterface.TABLE_NAME + ""."" + ItemDataInterface.COLUMN_ID +
+				"" INNER JOIN "" + CategoriesInterface.TABLE_NAME +
+				"" ON "" + ItemDataInterface.TABLE_NAME + ""."" + ItemDataInterface.COLUMN_ID_CATEGORY + "" = "" +
+				CategoriesInterface.TABLE_NAME + ""."" + CategoriesInterface.COLUMN_ID +
+				"" WHERE "" + COLUMN_NAME + "" LIKE ?"", new String[]{""%"" + substring + ""%""});
+",good
+91,commits,java,"private static Iterator<Long> getTableIds(IDBI dbi, TupleDomain<Integer> tupleDomain)
+{
+    Map<Integer, Domain> domains = tupleDomain.getDomains().get();
+    Domain schemaNameDomain = domains.get(getColumnIndex(SHARD_METADATA, SCHEMA_NAME));
+    Domain tableNameDomain = domains.get(getColumnIndex(SHARD_METADATA, TABLE_NAME));
+
+    StringBuilder sql = new StringBuilder(""SELECT table_id FROM tables "");
+    if (schemaNameDomain != null || tableNameDomain != null) {
+        sql.append(""WHERE "");
+        List<String> predicates = new ArrayList<>();
+        if (tableNameDomain != null && tableNameDomain.isSingleValue()) {
+            predicates.add(""table_name = ?"");
+        }
+        if (schemaNameDomain != null && schemaNameDomain.isSingleValue()) {
+            predicates.add(""schema_name = ?"");
+        }
+        sql.append(Joiner.on("" AND "").join(predicates));
+    }
+
+    ImmutableList.Builder<Long> tableIds = ImmutableList.builder();
+    try (Connection connection = dbi.open().getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+        int parameterIndex = 1;
+        if (tableNameDomain != null && tableNameDomain.isSingleValue()) {
+            statement.setString(parameterIndex++, getStringValue(tableNameDomain.getSingleValue()));
+        }
+        if (schemaNameDomain != null && schemaNameDomain.isSingleValue()) {
+            statement.setString(parameterIndex, getStringValue(schemaNameDomain.getSingleValue()));
+        }
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                tableIds.add(resultSet.getLong(""table_id""));
+            }
+        }
+    }
+    catch (SQLException | DBIException e) {
+        throw metadataError(e);
+    }
+    return tableIds.build().iterator();
+}
+",bad
+92,commits,java,"String queryString = ConstantValues.cFETCH_LOGS_ALL + "" AND exercise = '"" + queryString + ""'"";
+",bad
+93,commits,good,"String queryString = ConstantValues.cFETCH_LOGS_ALL + "" AND exercise = ?"";
+Cursor c = exerciseDB.rawQuery(queryString, new String[]{queryString});
+",good
+94,commits,java,"stmnt.addFilter(""SongId = '"" + entry.getTrackId() + ""'"");
+stmnt.addFilter(""RadioId = '"" + entry.getRadioId() + ""'"");
+stmnt.addFilter(""UserId = '"" + entry.getUserId() + ""'"");
+stmnt.addFilter(""Time = '"" + entry.getTime() + ""'"");
+",bad
+95,commits,good,"stmnt.addFilter(""SongId = ?"");
+addEntry.setInt(1, entry.getTrackId());
+stmnt.addFilter(""RadioId = ?"");
+addEntry.setInt(2, entry.getRadioId());
+stmnt.addFilter(""UserId = ?"");
+addEntry.setInt(3, entry.getUserId());
+stmnt.addFilter(""Time = ?"");
+addEntry.setTimestamp(4,entry.getTime());
+",good
+96,commits,java,"String sql = ""INSERT INTO petugas VALUES ('""+id_petugas.getText()+""','""+nama_petugas.getText()+""','""+username.getText()+""','""+password.getText()+""','""+level.getSelectedItem()+""')"";
+",bad
+97,commits,good,"PreparedStatement pstmt = pkk.koneksi.konek().prepareStatement(""INSERT INTO petugas VALUES (?, ?, ?, ?, ?)"");
+pstmt.setString(1, id_petugas.getText());
+pstmt.setString(2, nama_petugas.getText());
+pstmt.setString(3, username.getText());
+pstmt.setString(4, password.getText());
+pstmt.setString(5, level.getSelectedItem().toString());
+pstmt.executeUpdate();
+",good
+98,commits,java,"sb.append("" AND "" + DatabaseConstants.PROBLEM_CODE + ""='"" + criteria.getCode() +""'"");
+",bad
+99,commits,good,"sb.append("" AND "" + DatabaseConstants.PROBLEM_CODE + ""=?"");
+ps.setString(index, criteria.getCode());
+",good
+100,commits,java,"String.format(SELECT_USER_BY_EMAIL, mail)
+",bad
+101,commits,good,"jdbcTemplate.query(SELECT_USER_BY_EMAIL, new Object[]{mail}, new RowMapper<ConverterAppUser>(){
+    // rest of the code
+});
+",good
+102,commits,java,"String sql = ""SELECT id, name, phone, age, address "" +
+                ""FROM user_account "" +
+                ""WHERE id = "" + id;
+",bad
+103,commits,good,"String sql = ""SELECT id, name, phone, age, address "" +
+                ""FROM user_account "" +
+                ""WHERE id = ?"";
+
+try(Connection con = this.ds.getConnection()) {
+    PreparedStatement stm = con.prepareStatement(sql);
+    stm.setLong(1, id);
+    try (ResultSet rs = stm.executeQuery()) {
+        rs.next();
+        return readUserFromResultSet(rs);
+    }
+} catch (SQLException e) {
+    throw new BusTicketException(e);
+}
+",good
+104,commits,java,"case SEARCH_ID:
+    String id = uri.getLastPathSegment();
+    if (TextUtils.isEmpty(selection))
+    {
+        rowsDeleted = db.delete(HistorySearchSchema.TABLENAME, HistorySearchSchema.COLUMN_ID + ""=?"",
+                new String[]{id});
+    }
+    else
+    {
+        rowsDeleted = db.delete(HistorySearchSchema.TABLENAME, HistorySearchSchema.COLUMN_ID + ""=? and "" + selection,
+                new String[]{id}.concat(selectionArgs));
+    }
+    break;
+",bad
+105,commits,good,"case SEARCH_ID:
+    String id = uri.getLastPathSegment();
+    if (TextUtils.isEmpty(selection))
+    {
+        rowsUpdated = sqlDB.update(HistorySearchSchema.TABLENAME, values, HistorySearchSchema.COLUMN_ID
+                + ""=?"", new String[]{id});
+    }
+    else
+    {
+        rowsUpdated = sqlDB.update(HistorySearchSchema.TABLENAME, values, HistorySearchSchema.COLUMN_ID
+                + ""=? and "" + selection, new String[]{id}.concat(selectionArgs));
+    }
+    break;
+",good
+106,commits,java,"em1.createQuery(""SELECT d FROM GfDomain d WHERE d.denominate = '"" + denominate + ""'"");
+em1.createQuery(""SELECT d FROM GfDomain d WHERE d.idDomain = '"" + id + ""'"");
+em1.createQuery(""DELETE FROM GfDomain WHERE idDomain="" + id).executeUpdate();
+em1.createQuery(""UPDATE GfDomain d SET d.denominate='"" + DENOMINATE +""' WHERE d.idDomain = '"" + ID + ""'"").executeUpdate();
+",bad
+107,commits,good,"em1.createQuery(""SELECT d FROM GfDomain d WHERE d.denominate = :denominate"").setParameter(""denominate"", denominate);
+em1.createQuery(""SELECT d FROM GfDomain d WHERE d.idDomain = :id"").setParameter(""id"", id);
+em1.createQuery(""DELETE FROM GfDomain WHERE idDomain=:id"").setParameter(""id"", id).executeUpdate();
+em1.createQuery(""UPDATE GfDomain d SET d.denominate=:denominate WHERE d.idDomain = :id"").setParameter(""denominate"", DENOMINATE).setParameter(""id"", ID).executeUpdate();
+",good
+108,commits,java,"String sql = ""INSERT INTO buku VALUES ('""+kode_buku.getText()+""','""+judul_buku.getText()+""','""+tanggal_beli.getText().toString()+""','""+pengarang.getText()+""','""+penerbit.getText()+""','""+tahun_terbit.getText()+""','""+jumlah_buku.getText()+""')"";
+",bad
+109,commits,good,"String sql = ""INSERT INTO buku VALUES (?, ?, ?, ?, ?, ?, ?)"";
+PreparedStatement statement = pkk.koneksi.konek().prepareStatement(sql);
+statement.setString(1, kode_buku.getText());
+statement.setString(2, judul_buku.getText());
+statement.setString(3, tanggal_beli.getText().toString());
+statement.setString(4, pengarang.getText());
+statement.setString(5, penerbit.getText());
+statement.setString(6, tahun_terbit.getText());
+statement.setString(7, jumlah_buku.getText());
+statement.executeUpdate();
+",good
+110,commits,java,"return ! DSL.using(conn)
+                .fetch(""SELECT 1 FROM users WHERE name = '"" + credentials.getUsername()
+                + ""' AND password = '"" + credentials.getPassword()
+                        + ""'"").isEmpty();
+",bad
+111,commits,good,"return DSL.using(conn)
+                .fetch(""SELECT 1 FROM users WHERE name = ? AND password = ?"", credentials.getUsername(), credentials.getPassword())
+                .isEmpty();
+",good
+112,commits,java,"String sql = ""INSERT INTO buku VALUES ('""+kode_buku.getText()+""','""+judul_buku.getText()+""','""+tanggal_beli.getText().toString()+""','""+pengarang.getText()+""','""+penerbit.getText()+""','""+tahun_terbit.getText()+""','""+jumlah_buku.getText()+""')"";
+",bad
+113,commits,good,"String sql = ""INSERT INTO buku VALUES (?, ?, ?, ?, ?, ?, ?)"";
+PreparedStatement statement = pkk.koneksi.konek().prepareStatement(sql);
+statement.setString(1, kode_buku.getText());
+statement.setString(2, judul_buku.getText());
+statement.setString(3, tanggal_beli.getText().toString());
+statement.setString(4, pengarang.getText());
+statement.setString(5, penerbit.getText());
+statement.setString(6, tahun_terbit.getText());
+statement.setString(7, jumlah_buku.getText());
+statement.executeUpdate();
+",good
+114,commits,java,"Pattern pattern= Pattern.compile(""(.*\\=.*\\-\\-.*)|(.*(\\+).*)|(.*\\w+(%|\\$|#|&)\\w+.*)|(.*\\|\\|.*)|(.*\\s+(and|or)\\s+.*)"" +
+                ""|(.*\\b(select|update|union|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute)\\b.*)"");
+Matcher matcher=pattern.matcher(orders.toLowerCase());
+return matcher.find();
+",bad
+115,commits,java,"final String query = statementBuilder.encode( queryToken, false );
+",bad
+116,commits,good,"StringBuilder attributes = new StringBuilder();
+attributes.append(""INNER JOIN trackedentityattributevalue Q ON Q.trackedentityattributeid IN (:attributeIds) AND ("");
+
+SqlHelper orHlp = new SqlHelper(true);
+for (String queryToken : getTokens(params.getQuery().getFilter())) {
+    String paramName = ""queryToken"" + orHlp.getCounter();
+    attributes.append(orHlp.or()).append(""lower(Q.value) "").append(regexp).append("" :"").append(paramName);
+    query.setParameter(paramName, ""%"" + StringUtils.lowerCase(queryToken) + ""%"");
+}
+attributes.append("")"");
+",good
+117,commits,java,"return queryForSingleColumnResult(""SELECT * FROM "" + tableName + "" LIMIT ? OFFSET ?;"", jdbcTemplate, limit, offset);
+",bad
+118,commits,good,"return queryForSingleColumnResult(""SELECT * FROM ? LIMIT ? OFFSET ?;"", jdbcTemplate, tableName, limit, offset);
+",good
+119,commits,java,"String sql = String.format(""select %s from %s.%s %s"",
+        String.join("", "", fields),
+        namespace,
+        tableName,
+        String.join("" "", clauses)
+);
+",bad
+120,commits,good,"String sql = ""SELECT ? FROM ?.? ?"";
+try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    statement.setString(1, String.join("", "", fields));
+    statement.setString(2, namespace);
+    statement.setString(3, tableName);
+    statement.setString(4, String.join("" "", clauses));
+    // Execute the query and handle results...
+}
+",good
+121,commits,java,"return this.rc.executeUpdate(""INSERT INTO ""+className+"" (id, value) VALUES (""+hashCode + "", ""+value+"");"");
+",bad
+122,commits,good,"return this.rc.executeUpdate(""UPDATE "" + className + "" SET value = "" + value + "" WHERE id = "" + idCode() + "";"");
+",good
+123,commits,java,"String stmt=""INSERT INTO userinfo(username, password) ""
+            + ""VALUES ('""
+            + name + ""', '""
+            + password + ""');"";
+",bad
+124,commits,good,"String stmt=""INSERT INTO userinfo(username, password) VALUES (?, ?);"";
+PreparedStatement preparedStatement = DBInterface.getPreparedStatement(stmt);
+preparedStatement.setString(1, name);
+preparedStatement.setString(2, password);
+",good
+125,commits,java,"String.format(
+    GET_BY_COLUMN_NAME_QUERY_UNFORMATTED,
+    getDbEntityTableName(),
+    returnFormattedColumnNameOrTableName(columnName),
+    returnPreparedValueForQuery(columnValue)
+)
+",bad
+126,commits,good,"String.format(
+    GET_BY_COLUMN_NAME_QUERY_UNFORMATTED,
+    getDbEntityTableName(),
+    returnFormattedColumnNameOrTableName(columnName),
+    ""'"" + columnValue.toString().replace(""'"", ""''"") + ""'""
+)
+",good
+127,commits,java,"String sql = ""SELECT * FROM Users WHERE username = "" + toSQLString(username) + "" AND password = "" + toSQLString(hashedPassword);
+",bad
+128,commits,good,"PreparedStatement pstmt = cnn.prepareStatement(""SELECT * FROM Users WHERE username = ? AND password = ?"");
+pstmt.setString(1, username);
+pstmt.setString(2, hashedPassword);
+ResultSet rs = pstmt.executeQuery();
+",good
+129,commits,java,"Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery(""INSERT INTO comments VALUES ('"" + comment.getComment() + ""', '"" + comment.getUsername() + ""');"");
+",bad
+130,commits,good,"PreparedStatement stmt = conn.prepareStatement(""INSERT INTO comments VALUES (?, ?)"");
+stmt.setString(1, comment.getComment());
+stmt.setString(2, comment.getUsername());
+stmt.execute();
+",good
+131,commits,java,"String sql = ""update customer SET""
+    + "" C_PAYMENT_METHOD= '"" + input.getPaymentMethod() + ""',""
+    + "" C_CREDIT_INFO= '"" + input.getCreditInfo() + ""',""
+    + "" C_PO= "" + input.getPoId()
+    + "" where C_ID = "" + input.getCustomerId();
+",bad
+132,commits,good,"private synchronized String updateCPM(final Connection conn, final ChangePaymentMethodInput input)
+        throws SQLException {
+    String cpm = null;
+    String sql = ""update customer SET""
+            + "" C_PAYMENT_METHOD = ?,""
+            + "" C_CREDIT_INFO = ?,""
+            + "" C_PO = ?""
+            + "" where C_ID = ?"";
+    PreparedStatement pstmt = conn.prepareStatement(sql);
+    pstmt.setString(1, input.getPaymentMethod());
+    pstmt.setString(2, input.getCreditInfo());
+    pstmt.setLong(3, input.getPoId());
+    pstmt.setLong(4, input.getCustomerId());
+    pstmt.executeUpdate();
+    pstmt.close();
+    cpm = input.getPaymentMethod();
+    return (cpm);
+}
+",good
+133,commits,java,"ResultSet rs = db.query(""SELECT * FROM companiondb.inventory WHERE idcharacter = "" + characterid + "";"");
+",bad
+134,commits,good,"ResultSet rs = db.query(""SELECT * FROM companiondb.inventory WHERE idcharacter = ?;"");
+PreparedStatement pstmt = db.getPreparedStatement(query);
+pstmt.setInt(1, characterid);
+ResultSet rs = pstmt.executeQuery();
+",good
+135,commits,java,"if (DatabaseHelper.registerAccount(db, username, Authentication.SHA256(password), initialBalanceDecimal) == -1) {
+    throw new SQLiteException(String.format(""Account not registered for username '%s', password '%s', and balance '%s'"",
+            username, password, initialBalanceDecimal));
+}
+",bad
+136,commits,good,"// Use parameterized query to prevent SQL injection
+String sql = ""INSERT INTO accounts (username, password, balance) VALUES (?, ?, ?)"";
+SQLiteStatement statement = db.compileStatement(sql);
+statement.bindString(1, username);
+statement.bindString(2, Authentication.SHA256(password));
+statement.bindDouble(3, initialBalanceDecimal.doubleValue());
+long result = statement.executeInsert();
+if (result == -1) {
+    throw new SQLiteException(""Account not registered"");
+}
+",good
+137,commits,java,"String SQL = ""SELECT offset FROM Offset WHERE id = "" + id;
+",bad
+138,commits,good,"String SQL = ""SELECT offset FROM Offset WHERE id = ?"";
+PreparedStatement statement = this.connection.prepareStatement(SQL);
+statement.setString(1, id);
+ResultSet result = statement.executeQuery();
+",good
+139,commits,java,"""SELECT "" + column.getKey() + "" FROM "" + table.getTableName()
+",bad
+140,commits,good,"PreparedStatement preparedStatement = table.getDatabase().getConn().prepareStatement(""SELECT ? FROM ?"");
+preparedStatement.setString(1, column.getKey());
+preparedStatement.setString(2, table.getTableName());
+
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+141,commits,java,"stmt.execute(""SELECT * FROM economy ORDER BY balance DESC limit 10;"");
+",bad
+142,commits,good,"String sql = ""SELECT * FROM economy ORDER BY balance DESC LIMIT ?"";
+PreparedStatement pstmt = db.prepareStatement(sql);
+pstmt.setInt(1, 10);
+pstmt.execute();
+ResultSet rs = pstmt.getResultSet();
+",good
+143,commits,java,"res=mysql.returnQuery(""SELECT `name`,`type`,`key`,`value`,`server`,`world` FROM `""+table+""` ""
+                    + ""WHERE `type`=""+type.getCode()+"" AND `name`='""+name+""' ORDER BY id ASC"");
+",bad
+144,commits,good,"PreparedStatement stmt = mysql.getConnection().prepareStatement(""SELECT `name`,`type`,`key`,`value`,`server`,`world` FROM `""+table+""` ""
+                    + ""WHERE `type`=? AND `name`=? ORDER BY id ASC"");
+stmt.setInt(1, type.getCode());
+stmt.setString(2, name);
+res = stmt.executeQuery();
+",good
+145,commits,java,"String sql = ""SELECT id, user_id, price, currency, source, destination "" +
+                "" FROM ticket "" +
+                "" WHERE id = "" + ticketId;
+",bad
+146,commits,good,"String sql = ""SELECT id, user_id, price, currency, source, destination "" +
+                "" FROM ticket "" +
+                "" WHERE id = ?"";
+
+try (Connection con = this.ds.getConnection()) {
+    PreparedStatement stm = con.prepareStatement(sql);
+    stm.setLong(1, ticketId);
+    try (ResultSet rs = stm.executeQuery()) {
+        rs.next();
+        return readTicketFromResultSet(rs);
+    }
+} catch (SQLException e) {
+    throw new BusTicketException(e);
+}
+",good
+147,commits,java,"ResultSet findUser =
+    s.executeQuery(""SELECT USERNAME FROM USERS WHERE USERNAME = '"" +
+    user + ""' AND PASSHASH = '"" + pass + ""'"");
+",bad
+148,commits,good,"public static boolean isValidLogin(String user, String pass) {
+    try {
+        PreparedStatement ps = conn.prepareStatement(""SELECT USERNAME FROM USERS WHERE USERNAME = ? AND PASSHASH = ?"");
+        ps.setString(1, user);
+        ps.setString(2, pass);
+        ResultSet findUser = ps.executeQuery();
+        return findUser.next();
+    } catch (Exception e) {
+        System.err.println(e.getMessage());
+        return false;
+    }
+}
+",good
+149,commits,java,"String veritylogin = ""select * from users where password = '"" + PasswordFieldPassword.getText() +
+                    ""'and username='"" + TextFieldUserName.getText() + ""'"";
+",bad
+150,commits,good,"String veritylogin = ""select * from users where password = ? and username = ?"";
+PreparedStatement statement = connection.prepareStatement(veritylogin);
+statement.setString(1, PasswordFieldPassword.getText());
+statement.setString(2, TextFieldUserName.getText());
+ResultSet rs = statement.executeQuery();
+",good
+151,commits,java,"String query = ""SELECT * FROM "" + TABLE_NAME +
+                "" WHERE "" + COLUMN_OTHER + ""=\"""" + phone + ""\"""";
+",bad
+152,commits,good,"String query = ""SELECT * FROM "" + TABLE_NAME +
+                "" WHERE "" + COLUMN_OTHER + "" = ?"";
+Cursor cursor = null;
+if (db != null) {
+    cursor = db.rawQuery(query, new String[]{phone});
+}
+",good
+153,commits,java,"sqLiteDatabase.delete(DetailedReportsTableConsts.TABLE_NAME,
+                DetailedReportsTableConsts.REPORTS_TABLE_UUID_COLUMN + ""='"" + reportUuid + ""'"", null);
+",bad
+154,commits,good,"sqLiteDatabase.delete(DetailedReportsTableConsts.TABLE_NAME,
+                DetailedReportsTableConsts.REPORTS_TABLE_UUID_COLUMN + ""=?"", new String[]{reportUuid});
+",good
+155,commits,java,"String sqlQuery = ""SELECT * FROM author WHERE authorId = "" + id;
+",bad
+156,commits,good,"String sqlQuery = ""SELECT * FROM author WHERE authorId = :id"";
+Query query = session.createNativeQuery(sqlQuery, Author.class);
+query.setParameter(""id"", id);
+authors = query.list();
+",good
+157,commits,java,"final Cursor cursor = getReadableDatabase().rawQuery(""SELECT user_id, user_name, user_password FROM users WHERE lower(user_name) = \"""" + name.toLowerCase() + ""\"""", null);
+",bad
+158,commits,good,"final Cursor cursor = getReadableDatabase().rawQuery(""SELECT user_id, user_name, user_password FROM users WHERE lower(user_name) = ?"", new String[] {name.toLowerCase()});
+",good
+159,commits,java,"String query = new String(""SELECT * FROM Login L WHERE L.User='""+SUser+""' "");
+",bad
+160,commits,good,"String query = new String(""SELECT * FROM Login L WHERE L.User=?"");
+PreparedStatement pstmt = con.prepareStatement(query);
+pstmt.setString(1, SUser);
+rs = pstmt.executeQuery();
+",good
+161,commits,java,"String query = ""SELECT * FROM Users WHERE username=? AND password=?"" ;
+PreparedStatement = connection.prepareStatement(query) ;
+PreparedStatement.setString(1,username);
+PreparedStatement.setString(2,userpassword) ;
+",bad
+162,commits,java,"em1.createQuery(""SELECT s FROM GfSkill s WHERE s.name = '"" + name + ""'"");
+em1.createQuery(""SELECT s FROM GfSkill s WHERE s.idSkill = '"" + id + ""'"");
+em1.createQuery(""DELETE FROM GfSkill WHERE idSkill="" + id).executeUpdate();
+em1.createQuery(""UPDATE GfSkill s SET s.name='"" + NAME + ""', s.weight='"" + WEIGHT + ""' WHERE s.idSkill = '"" + ID + ""'"").executeUpdate();
+",bad
+163,commits,good,"Query query = em1.createQuery(""SELECT s FROM GfSkill s WHERE s.name = :name"").setParameter(""name"", name);
+Query query = em1.createQuery(""SELECT s FROM GfSkill s WHERE s.idSkill = :id"").setParameter(""id"", id);
+em1.createQuery(""DELETE FROM GfSkill WHERE idSkill=:id"").setParameter(""id"", id).executeUpdate();
+em1.createQuery(""UPDATE GfSkill s SET s.name=:NAME, s.weight=:WEIGHT WHERE s.idSkill = :ID"").setParameter(""NAME"", NAME).setParameter(""WEIGHT"", WEIGHT).setParameter(""ID"", ID).executeUpdate();
+",good
+164,commits,java,"sb.append('\'');
+sb.append(paths[i]);
+sb.append('\'');
+",bad
+165,commits,good,"statement.setString(i + 2, paths[i]);
+",good
+166,commits,java,"String sql = ""select "" + cuboidColumn + "", sum("" + hitMeasure + "")""
+        + "" from "" + table
+        + "" where "" + QueryCubePropertyEnum.CUBE.toString() + "" = '"" + cubeName + ""'""
+        + "" group by "" + cuboidColumn;
+",bad
+167,commits,good,"String sql = ""select ?, sum(?) from ? where ? = ? group by ?"";
+PreparedStatement statement = connection.prepareStatement(sql);
+statement.setString(1, cuboidColumn);
+statement.setString(2, hitMeasure);
+statement.setString(3, table);
+statement.setString(4, QueryCubePropertyEnum.CUBE.toString());
+statement.setString(5, cubeName);
+statement.setString(6, cuboidColumn);
+ResultSet resultSet = statement.executeQuery();
+",good
+168,commits,java,"String sql = ""INSERT INTO shareapp.user_post(user_id,post_file,post_title,post_thumbnail,post_description,post_date,post_views,post_likes,post_comments)VALUES('"" +
+                    post.getUserId() + ""', '"" +
+                    post.getPostFile() + ""', '"" +
+                    post.getPostTitle() + ""', '"" +
+                    post.getPostThumbnail() + ""', '"" +
+                    post.getPostDescription() + ""', '"" +
+                    post.getPostDate() + ""', '"" +
+                    post.getPostViews() + ""', '"" +
+                    post.getPostLikes() + ""', '"" +
+                    post.getPostComments() + ""')"";
+",bad
+169,commits,good,"@Override
+public boolean uploadPost(Post post) {
+    boolean status = false;
+
+    Connection dbCon = null;
+    PreparedStatement pstmt = null;
+
+    try {
+        dbCon = getDbConnection();
+
+        String sql = ""INSERT INTO shareapp.user_post(user_id,post_file,post_title,post_thumbnail,post_description,post_date,post_views,post_likes,post_comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"";
+
+        pstmt = dbCon.prepareStatement(sql);
+        pstmt.setInt(1, post.getUserId());
+        pstmt.setString(2, post.getPostFile());
+        pstmt.setString(3, post.getPostTitle());
+        pstmt.setString(4, post.getPostThumbnail());
+        pstmt.setString(5, post.getPostDescription());
+        pstmt.setString(6, post.getPostDate());
+        pstmt.setInt(7, post.getPostViews());
+        pstmt.setInt(8, post.getPostLikes());
+        pstmt.setString(9, post.getPostComments());
+
+        int row = pstmt.executeUpdate();
+        if (row != 0) {
+            status = true;
+        }
+    } catch (SQLException sqlEx) {
+        logger.warning(""Query not execution failed: "");
+        sqlEx.printStackTrace();
+    } finally {
+        closeStatement(pstmt);
+        closeDbConnection(dbCon);
+    }
+
+    return status;
+}
+",good
+170,commits,java,"getDatabase().getStmt().execute(""ALTER TABLE "" + getTableName() + "" RENAME TO "" + newName + "";"");
+",bad
+171,commits,good,"getDatabase().getStmt().execute(""ALTER TABLE "" + getTableName() + "" RENAME TO ?;"", new String[]{newName});
+",good
+172,commits,java,"sql = ""INSERT INTO perms (image_id, user_id) values ("" +
+image_id + "", "" + request.getSession().getAttribute(""user"") + "")"";
+",bad
+173,commits,good,"sql = ""INSERT INTO perms (image_id, user_id) values (?, ?)"";
+PreparedStatement statement = con.prepareStatement(sql);
+statement.setString(1, image_id);
+statement.setString(2, (String) request.getSession().getAttribute(""user""));
+statement.executeUpdate();
+",good
+174,commits,java,"statement.executeUpdate(String.format(Constants.DDL_CREATE_SCHEMA, name));
+",bad
+175,commits,good,"try (Connection connection = dataSource.getConnection();
+     PreparedStatement statement = connection.prepareStatement(Constants.DDL_CREATE_SCHEMA)) {
+    statement.setString(1, name);
+    statement.executeUpdate();
+} catch (SQLException e) {
+    throw new RuntimeException(""Can not connect to database"", e);
+}
+",good
+176,commits,java,"String query = ""SELECT c.name, c.country_id , r.name, c2.name \n"" +
+                ""FROM countries c \n"" +
+                ""JOIN regions r ON r.region_id = c.region_id \n"" +
+                ""JOIN continents c2 ON c2.continent_id = r.continent_id \n"" +
+                ""WHERE c.name LIKE '%"" + in + ""%'\n"" +
+                ""ORDER BY c.name "";
+",bad
+177,commits,good,"String query = ""SELECT c.name, c.country_id , r.name, c2.name "" +
+                ""FROM countries c "" +
+                ""JOIN regions r ON r.region_id = c.region_id "" +
+                ""JOIN continents c2 ON c2.continent_id = r.continent_id "" +
+                ""WHERE c.name LIKE ? "" +
+                ""ORDER BY c.name "";
+
+try (PreparedStatement ps = con.prepareStatement(query)) {
+    ps.setString(1, ""%"" + in + ""%"");
+    try (ResultSet rs = ps.executeQuery()) {
+        // rest of the code
+    }
+}
+",good
+178,commits,java,"String query = ""SELECT * FROM users WHERE user = '"" + user + ""' AND password = '"" + pass + ""'"";
+stmt.executeQuery(query);
+",bad
+179,commits,good,"String query = ""SELECT * FROM users WHERE user = ? AND password = ?"";
+pstmt = conn.prepareStatement(query);
+pstmt.setString(1, user);
+pstmt.setString(2, pass);
+rs = pstmt.executeQuery();
+",good
+180,commits,java,"query( ""SELECT nick FROM nicky WHERE uuid = '"" + uuid + ""';"", true );
+query( ""SELECT uuid, nick, name FROM nicky WHERE nick LIKE '"" + sqlSearch + ""';"", true );
+query( ""SELECT nick FROM nicky WHERE nick = '"" + nick + ""';"", true );
+query( ""INSERT INTO nicky (uuid, nick, name) VALUES ('"" + uuid + ""','"" + nick + ""','"" + name + ""');"", false );
+query( ""DELETE FROM nicky WHERE uuid = '"" + uuid + ""';"", false );
+query( ""UPDATE nicky SET name = '"" + name + ""' WHERE uuid = '"" + uuid + ""';"", false );
+",bad
+181,commits,good,"public String downloadNick(String uuid) {
+    String nick;
+
+    if (cache.containsKey(uuid)) {
+        return cache.get(uuid);
+    }
+
+    String sql = ""SELECT nick FROM nicky WHERE uuid = ?"";
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, uuid);
+        ResultSet set = statement.executeQuery();
+
+        if (!set.next()) {
+            // Store null to avoid spammy queries.
+            cache.put(uuid, null);
+            return null;
+        }
+
+        nick = set.getString(""nick"");
+        cache.put(uuid, nick);
+        return nick;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
+",good
+182,commits,java,"String sqlQuery = ""SELECT * FROM thesis WHERE title ='"" + title + ""'"";
+",bad
+183,commits,good,"String sqlQuery = ""SELECT * FROM thesis WHERE title = :title"";
+List<Thesis> thesisList = session.createNativeQuery(sqlQuery, Thesis.class)
+                                 .setParameter(""title"", title)
+                                 .list();
+",good
+184,commits,java,"String sql = ""SELECT country FROM "" + player.getName()+ "" WHERE country IS NOT NULL LIMIT 1"";
+",bad
+185,commits,good,"String sql = ""SELECT country FROM players WHERE name = ? AND country IS NOT NULL LIMIT 1"";
+try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    statement.setString(1, player.getName());
+    try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+            return resultSet.getString(""countryName"");
+        }
+    }
+}
+",good
+186,commits,java,"String SQL = ""INSERT INTO person VALUES("" + 1 + "",'"" + person.getName() +
+                    ""',"" + person.getAge() + "",'"" + person.getEmail() + ""')"";
+",bad
+187,commits,good,"String SQL = ""INSERT INTO person VALUES(?, ?, ?, ?)"";
+PreparedStatement statement = connection.prepareStatement(SQL);
+statement.setInt(1, 1);
+statement.setString(2, person.getName());
+statement.setInt(3, person.getAge());
+statement.setString(4, person.getEmail());
+statement.executeUpdate();
+",good
+188,commits,java,"String SQL = ""INSERT INTO "" + super.getTable() + "" (MaxExpense, RequiredSpace, AgePreference, IsAngry, IsHappy, "" +
+                    ""IsNeedy, IsCaring, IsQuiet, CreatedAt) VALUES('"" + adoptionRequirement.getMaxExpense() + ""','"" +
+                    adoptionRequirement.getRequiredSpace() + ""','"" + adoptionRequirement.getAgePreference() + ""','"" +
+                    adoptionRequirement.getIsAngry() + ""','"" + adoptionRequirement.getIsHappy() + ""','"" +
+                    adoptionRequirement.getIsNeedy() + ""','"" + adoptionRequirement.getIsCaring() + ""','"" +
+                    adoptionRequirement.getIsQuiet() + ""','"" + Instant.now().toString() + ""')"";
+",bad
+189,commits,good,"String SQL = ""INSERT INTO "" + super.getTable() + "" (MaxExpense, RequiredSpace, AgePreference, IsAngry, IsHappy, "" +
+                    ""IsNeedy, IsCaring, IsQuiet, CreatedAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"";
+
+try (PreparedStatement stmt = con.prepareStatement(SQL)) {
+    stmt.setDouble(1, adoptionRequirement.getMaxExpense());
+    stmt.setDouble(2, adoptionRequirement.getRequiredSpace());
+    stmt.setDouble(3, adoptionRequirement.getAgePreference());
+    stmt.setBoolean(4, adoptionRequirement.getIsAngry());
+    stmt.setBoolean(5, adoptionRequirement.getIsHappy());
+    stmt.setBoolean(6, adoptionRequirement.getIsNeedy());
+    stmt.setBoolean(7, adoptionRequirement.getIsCaring());
+    stmt.setBoolean(8, adoptionRequirement.getIsQuiet());
+    stmt.setTimestamp(9, Timestamp.from(Instant.now()));
+    stmt.execute();
+}
+",good
+190,commits,java,"String sql = ""select * from pengembalian WHERE kode_pengembalian LIKE '%""+carii+""%'OR judul_buku LIKE '""+carii+""'"";
+",bad
+191,commits,good,"String sql = ""select * from pengembalian WHERE kode_pengembalian LIKE ? OR judul_buku LIKE ?"";
+PreparedStatement stmt = pkk.koneksi.konek().prepareStatement(sql);
+stmt.setString(1, ""%"" + carii + ""%"");
+stmt.setString(2, carii);
+ResultSet cari = stmt.executeQuery();
+",good
+192,commits,java,"sql = ""SELECT * FROM "" + player.getName() + "" WHERE ip = '"" + ip + ""'"";
+",bad
+193,commits,good,"PreparedStatement preparedStatement = connection.prepareStatement(""SELECT * FROM "" + player.getName() + "" WHERE ip = ?"");
+preparedStatement.setString(1, ip);
+preparedStatement.execute();
+",good
+194,commits,java,"String tagIdExpr = ""1"";
+if (tagId != Long.MIN_VALUE)
+    tagIdExpr = RecordsRows.TAG_ID + ""='"" + tagId + ""'"";
+
+String maxDateExpr = ""1"";
+if (maxDate > Long.MIN_VALUE)
+    maxDateExpr = RecordsRows.NEXT_APPEAR + ""<'"" + maxDate + ""'"";
+
+Cursor cursor = db.rawQuery(""select * from "" + RECORDS_TABLE + "" where ("" + tagIdExpr + "") and ("" + maxDateExpr + "") order by "" + RecordsRows.NEXT_APPEAR + "" asc;"", null);
+",bad
+195,commits,good,"String query = ""select * from "" + RECORDS_TABLE + "" where (1) and (1) order by "" + RecordsRows.NEXT_APPEAR + "" asc;"";
+ArrayList<String> selectionArgs = new ArrayList<>();
+
+if (tagId != Long.MIN_VALUE) {
+    query = ""select * from "" + RECORDS_TABLE + "" where ("" + RecordsRows.TAG_ID + ""=?) and (1) order by "" + RecordsRows.NEXT_APPEAR + "" asc;"";
+    selectionArgs.add(String.valueOf(tagId));
+}
+
+if (maxDate > Long.MIN_VALUE) {
+    if (selectionArgs.isEmpty()) {
+        query = ""select * from "" + RECORDS_TABLE + "" where (1) and ("" + RecordsRows.NEXT_APPEAR + ""<?) order by "" + RecordsRows.NEXT_APPEAR + "" asc;"";
+    } else {
+        query = ""select * from "" + RECORDS_TABLE + "" where ("" + RecordsRows.TAG_ID + ""=?) and ("" + RecordsRows.NEXT_APPEAR + ""<?) order by "" + RecordsRows.NEXT_APPEAR + "" asc;"";
+    }
+    selectionArgs.add(String.valueOf(maxDate));
+}
+
+Cursor cursor = db.rawQuery(query, selectionArgs.toArray(new String[0]));
+",good
+196,commits,java,"String sqlQuery = ""SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.id = "" + id;
+",bad
+197,commits,good,"String sqlQuery = ""SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.id = :id"";
+TypedQuery<Owner> query = this.entityManager.createQuery(sqlQuery, Owner.class);
+query.setParameter(""id"", id);
+",good
+198,commits,java,"database.execSQL(""INSERT INTO savedWorkouts (name, exercises) VALUES ('"" + workoutNameStr
+                        + ""', '"" + exercisesStr + ""')"");
+",bad
+199,commits,good,"database.execSQL(""INSERT INTO savedWorkouts (name, exercises) VALUES (?, ?)"", new Object[]{workoutNameStr, exercisesStr});
+",good
+200,commits,java,"String where = "" role='"" + role + ""' "";
+",bad
+201,commits,good,"String where = "" role=? "";
+...
+Page<PermissionInfo> pageInfo = helper
+        .fetchPage(sqlCountRows + where, sqlFetchRows + where, new Object[]{role}, pageNo,
+                pageSize, PERMISSION_ROW_MAPPER);
+",good
+202,commits,java,"int nums = userfollowManager.findByCondition("" where author_id = '""+author_id+""' and follow_id = '""+follow_id+""' "").getResultlist().size();
+",bad
+203,commits,good,"int nums = userfollowManager.findByCondition("" where author_id = ? and follow_id = ? "", author_id, follow_id).getResultlist().size();
+",good
+204,commits,java,"String queryCol = item.isNumeric() ? ""CAST(psi.eventdatavalues #>> '{"" + col + "", value}' AS NUMERIC)"" : ""lower(psi.eventdatavalues #>> '{"" + col + "", value}')"";
+eventDataValuesWhereSql += "" "" + queryCol + "" "" + filter.getSqlOperator() + "" ? "";
+",bad
+205,commits,good,"PreparedStatement ps = connection.prepareStatement(sql);
+ps.setString(1, filter.getSqlFilter(encodedFilter));
+",good
+206,commits,java,"String delq=""DELETE FROM ""+table+"" WHERE `key`='""+key+""'"";
+mysql.runQuery(delq);
+",bad
+207,commits,good,"String delq=""DELETE FROM ""+table+"" WHERE `key`=?"";
+PreparedStatement stmt = mysql.prepareStatement(delq);
+stmt.setString(1, key);
+stmt.executeUpdate();
+",good
+208,commits,java,"String Sql=""select * from peminjaman where tanggal_pinjam='""+harian.getSelectedItem()+""'"";
+",bad
+209,commits,good,"String Sql=""select * from peminjaman where tanggal_pinjam=?"";
+PreparedStatement state = pkk.koneksi.konek().prepareStatement(Sql);
+state.setString(1, (String) harian.getSelectedItem());
+ResultSet pinjam = state.executeQuery();
+",good
+210,commits,java,"ResultSet resultSet = mysqlConnection.createStatement().executeQuery(""SELECT * FROM ""+userTabelName+"" WHERE username='""+usernameInput+""'"");
+",bad
+211,commits,good,"PreparedStatement preparedStatement = mysqlConnection.prepareStatement(""SELECT * FROM ""+userTabelName+"" WHERE username=?"");
+preparedStatement.setString(1, usernameInput);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+212,commits,java,"String SQL = ""INSERT INTO "" + super.getTable() + "" (Title, Discussion, UserId, CreatedAt)""
+            + "" VALUES('"" + topic.getTitle() + ""','"" + topic.getDiscussion() + ""','"" + topic.getUserId() +
+            ""','"" + Instant.now().toString() + ""')"";
+",bad
+213,commits,good,"String SQL = ""INSERT INTO "" + super.getTable() + "" (Title, Discussion, UserId, CreatedAt)""
+            + "" VALUES(?, ?, ?, ?)"";
+
+try (PreparedStatement stmt = con.prepareStatement(SQL)) {
+    stmt.setString(1, topic.getTitle());
+    stmt.setString(2, topic.getDiscussion());
+    stmt.setInt(3, topic.getUserId());
+    stmt.setTimestamp(4, Timestamp.from(Instant.now()));
+    stmt.execute();
+}
+",good
+214,commits,java,"String query = ""select uname, passwd from users where uname = '"" + userName + ""'"";
+",bad
+215,commits,good,"String query = ""select uname, passwd from users where uname = ?"";
+PreparedStatement pstmt = conn.prepareStatement(query);
+pstmt.setString(1, userName);
+ResultSet rs = pstmt.executeQuery();
+",good
+216,commits,java,"String query = String.format(""INSERT INTO %s VALUES ('%s', '%s', '%s', %d, %d, '%s')"", this.getTableName(), deadLine.getId(), deadLine.getName(), deadLine.getContent(), deadLine.getEndTimestamp(), deadLine.getChannelId(), deadLine.getDeadlineStatus());
+",bad
+217,commits,good,"public Status addDeadLine(DeadLine deadLine){
+    String query = ""INSERT INTO "" + this.getTableName() + "" VALUES (?, ?, ?, ?, ?, ?)"";
+    try (PreparedStatement pstmt = this.getDatabase().getConnection().prepareStatement(query)) {
+        pstmt.setString(1, deadLine.getId());
+        pstmt.setString(2, deadLine.getName());
+        pstmt.setString(3, deadLine.getContent());
+        pstmt.setLong(4, deadLine.getEndTimestamp());
+        pstmt.setLong(5, deadLine.getChannelId());
+        pstmt.setString(6, deadLine.getDeadlineStatus().toString());
+        pstmt.executeUpdate();
+        return Status.SUCCESS;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return Status.FAILURE;
+    }
+}
+",good
+218,commits,java,"String ID = request.getParameter(""playlistID"");
+long playlistID = Long.parseLong(ID);
+",bad
+219,commits,good,"String ID = request.getParameter(""playlistID"");
+if (ID != null && ID.matches(""\\d+"")) {
+    long playlistID = Long.parseLong(ID);
+    // Use playlistID in database operations
+} else {
+    // Handle invalid input
+}
+",good
+220,commits,java,"for (String sqlStmt : sql) {
+  this.currSql = appendSql(this.currSql, sqlStmt);
+  stmt.addBatch(sqlStmt);
+}
+",bad
+221,commits,good,"List<PreparedStatementCreator> statements = new ArrayList<>();
+statements.add(new PreparedStatementCreator() {
+  @Override
+  public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+    PreparedStatement ps = con.prepareStatement(""UPDATE table SET column = ? WHERE id = ?"");
+    ps.setString(1, newValue);
+    ps.setInt(2, id);
+    return ps;
+  }
+});
+int[] rowsAffected = cancelableJdbcTemplate.batchUpdate(cancelOp, statements);
+",good
+222,commits,java,"String sql = ""select * from users where username='""+username+""' and password='""+password+""'"";
+",bad
+223,commits,good,"String sql = ""select * from users where username=? and password=?"";
+PreparedStatement ps = c.prepareStatement(sql);
+ps.setString(1, username);
+ps.setString(2, password);
+ResultSet rs = ps.executeQuery();
+",good
+224,commits,java,"connection.prepareStatement(""select points from users where uid='"" + id + ""';"")
+",bad
+225,commits,good,"PreparedStatement statement = connection.prepareStatement(""select points from users where uid = ?"");
+statement.setString(1, id);
+",good
+226,commits,java,"computerDb.rawQuery(""SELECT * FROM ""+COMPUTER_TABLE_NAME+"" WHERE ""+COMPUTER_NAME_COLUMN_NAME+""='""+name+""'"", null);
+",bad
+227,commits,good,"computerDb.rawQuery(""SELECT * FROM ""+COMPUTER_TABLE_NAME+"" WHERE ""+COMPUTER_NAME_COLUMN_NAME+""=?"", new String[]{name});
+",good
+228,commits,java,"DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+databaseTableFilter.setValue(id.toString());
+databaseTableFilter.setColumn(databaseColumn);
+List<DatabaseTableRecord> records = getChatData(databaseTableFilter);
+",bad
+229,commits,good,"DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+databaseTableFilter.setParameter(id.toString());
+databaseTableFilter.setColumn(databaseColumn);
+List<DatabaseTableRecord> records = getChatData(databaseTableFilter);
+",good
+230,commits,java,"""SELECT "" + table.getPrimaryKey().getKey() + "", "" + column.getKey() + "" FROM "" + table.getTableName()
+",bad
+231,commits,good,"String sql = ""SELECT ?, ? FROM ?"";
+PreparedStatement statement = table.getDatabase().getStmt().prepareStatement(sql);
+statement.setString(1, table.getPrimaryKey().getKey());
+statement.setString(2, column.getKey());
+statement.setString(3, table.getTableName());
+ResultSet resultSet = statement.executeQuery();
+",good
+232,commits,java,"sql.append(""WHERE "" + USERS_USERNAME + "" = '"" + DatabaseConnection.makeSafe(username) + ""' AND "");
+sql.append(SMTPEDGEPROFILE_PROFILENAME + "" = '"" + DatabaseConnection.makeSafe(profileName) + ""';"");
+",bad
+233,commits,good,"PreparedStatement st = null;
+sql.append(""WHERE "" + USERS_USERNAME + "" = ? AND "");
+sql.append(SMTPEDGEPROFILE_PROFILENAME + "" = ?;"");
+
+try {
+    Connection con = this.getConnection().getCon();
+    st = con.prepareStatement(sql.toString());
+    st.setString(1, DatabaseConnection.makeSafe(username));
+    st.setString(2, DatabaseConnection.makeSafe(profileName));
+    result = st.executeQuery();
+    // rest of the code
+} catch (Exception e) {
+    // handle exception
+}
+",good
+234,commits,java,"String query = String.format(AUTH_QUERY, username, password);
+",bad
+235,commits,good,"String query = ""select * from user where username=? and password=?"";
+try (PreparedStatement stmt = database.prepareStatement(query)) {
+  stmt.setString(1, username);
+  stmt.setString(2, password);
+  ResultSet results = stmt.executeQuery();
+  return results.next();
+}
+",good
+236,commits,java,"""SELECT * FROM "" + table.getTableName() + "" WHERE "" + table.getPrimaryKey().getKey() + "" = "" + DataTypes.needQuotes(primaryValue, table.getPrimaryKey().getValue())
+",bad
+237,commits,good,"PreparedStatement preparedStatement = table.getDatabase().getConnection().prepareStatement(""SELECT * FROM "" + table.getTableName() + "" WHERE "" + table.getPrimaryKey().getKey() + "" = ?"");
+preparedStatement.setObject(1, primaryValue);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+238,commits,java,"String findNewUsersSql = ""SELECT exists(SELECT nickname FROM forum_users WHERE forum = '"" + forum.getSlug() + ""' and nickname = '"" + thread.getAuthor() + ""')"";
+",bad
+239,commits,good,"String findNewUsersSql = ""SELECT exists(SELECT nickname FROM forum_users WHERE forum = ? and nickname = ?)"";
+Boolean haveUser = jdbcTemplate.queryForObject(findNewUsersSql, Boolean.class, forum.getSlug(), thread.getAuthor());
+",good
+240,commits,java,"String query = String
+                .format(""SELECT * FROM user ""
+                        + ""WHERE email = '%s' ""
+                        + ""AND password = md5('%s')"", email, password);
+",bad
+241,commits,good,"public User login(String email, String password) {
+    User user = null;
+    String query = ""SELECT * FROM user WHERE email = ? AND password = md5(?)"";
+    try (PreparedStatement statement = database.getConnection().prepareStatement(query)) {
+        statement.setString(1, email);
+        statement.setString(2, password);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            user = new User();
+            user.setId(resultSet.getInt(""user_id""));
+            user.setFirstName(resultSet.getString(""first_name""));
+            user.setLastName(resultSet.getString(""last_name""));
+            user.setEmail(resultSet.getString(""email""));
+            user.setPassword(resultSet.getString(""password""));
+        }
+    } catch (Exception e) {
+        return user;
+    }
+    return user;
+}
+",good
+242,commits,java,"statement.execute(String.format(resolver.getSchemaSwitchCommand(), tenantIdentifier));
+",bad
+243,commits,good,"try (PreparedStatement statement = connection.prepareStatement(resolver.getSchemaSwitchCommand())) {
+    statement.setString(1, tenantIdentifier);
+    statement.execute();
+} catch (SQLException e) {
+    throw new HibernateException(
+        ""Could not alter JDBC connection to specified schema ["" + tenantIdentifier + ""]"", e
+    );
+}
+",good
+244,commits,java,"public synchronized QueryResult getQueryResultByNativeSQLQuery(String nativeSQLQuery) {
+    // ...
+    try {
+        queryResult = executeSelectNativeSqlQuery(nativeSQLQuery);
+    } catch(ClassCastException cce) {
+        // ...
+    } catch(DataAccessLayerException dalc) {
+        // ...
+    }
+    return queryResult;
+}
+
+public QueryResult executeSelectNativeSqlQuery(String selectSQLQuery) throws DataAccessLayerException {
+    // ...
+    try {
+        ResultSet resultSet = stmt.executeQuery(selectSQLQuery);
+        results = mapResultSet(resultSet);
+    } catch (SQLException e1) {
+        // ...
+    }
+    // ...
+}
+",bad
+245,commits,good,"public QueryResult executeSelectNativeSqlQuery(String selectSQLQuery, Object... params) throws DataAccessLayerException {
+    // ...
+    try {
+        PreparedStatement pstmt = conn.prepareStatement(selectSQLQuery);
+        for (int i = 0; i < params.length; i++) {
+            pstmt.setObject(i + 1, params[i]);
+        }
+        ResultSet resultSet = pstmt.executeQuery();
+        results = mapResultSet(resultSet);
+    } catch (SQLException e1) {
+        // ...
+    }
+    // ...
+}
+",good
+246,commits,java,"Cursor cursor = db.rawQuery(""SELECT "" + TABLE_NAME + "".*, "" +
+				ItemsInterface.COLUMN_NAME + "", "" +
+				ItemsInterface.COLUMN_DEFAULT_IMAGE_PATH + "", "" +
+				ItemsInterface.COLUMN_IMAGE_PATH + "", "" +
+				ItemDataInterface.COLUMN_ID_CATEGORY + "" AS "" + ItemDataInterface.COLUMN_ID_CATEGORY + ""Item , "" +
+				ItemsInterface.TABLE_NAME + ""."" + ItemsInterface.COLUMN_ID_DATA + "" AS "" + DEFAULT_ITEM_DATA +
+				"" FROM "" + TABLE_NAME + "" INNER JOIN "" + ItemsInterface.TABLE_NAME +
+				"" ON "" + TABLE_NAME + ""."" + COLUMN_ID_ITEM + "" = "" + ItemsInterface.TABLE_NAME + ""."" + ItemsInterface.COLUMN_ID +
+				"" INNER JOIN "" + ItemDataInterface.TABLE_NAME +
+				"" ON "" + ItemsInterface.TABLE_NAME + ""."" + ItemsInterface.COLUMN_ID + "" = "" + ItemDataInterface.TABLE_NAME + ""."" + ItemDataInterface.COLUMN_ID +
+				"" WHERE "" + ItemsInterface.COLUMN_NAME + "" LIKE '"" + name +
+				""' AND "" + COLUMN_ID_LIST + "" = "" + idList, null);
+",bad
+247,commits,good,"Cursor cursor = db.rawQuery(""SELECT "" + TABLE_NAME + "".*, "" +
+				ItemsInterface.COLUMN_NAME + "", "" +
+				ItemsInterface.COLUMN_DEFAULT_IMAGE_PATH + "", "" +
+				ItemsInterface.COLUMN_IMAGE_PATH + "", "" +
+				ItemDataInterface.COLUMN_ID_CATEGORY + "" AS "" + ItemDataInterface.COLUMN_ID_CATEGORY + ""Item , "" +
+				ItemsInterface.TABLE_NAME + ""."" + ItemsInterface.COLUMN_ID_DATA + "" AS "" + DEFAULT_ITEM_DATA +
+				"" FROM "" + TABLE_NAME + "" INNER JOIN "" + ItemsInterface.TABLE_NAME +
+				"" ON "" + TABLE_NAME + ""."" + COLUMN_ID_ITEM + "" = "" + ItemsInterface.TABLE_NAME + ""."" + ItemsInterface.COLUMN_ID +
+				"" INNER JOIN "" + ItemDataInterface.TABLE_NAME +
+				"" ON "" + ItemsInterface.TABLE_NAME + ""."" + ItemsInterface.COLUMN_ID + "" = "" + ItemDataInterface.TABLE_NAME + ""."" + ItemDataInterface.COLUMN_ID +
+				"" WHERE "" + ItemsInterface.COLUMN_NAME + "" LIKE ? AND "" + COLUMN_ID_LIST + "" = ?"", new String[]{""%"" + name + ""%"", String.valueOf(idList)});
+",good
+248,commits,java,"String queryBufferEnd.append(dbcol + ""='"" + cookie_value + ""'"");
+",bad
+249,commits,good,"String queryBufferEnd.append(dbcol + ""=?"");
+// Use PreparedStatement to set the parameter value
+preparedStatement.setString(1, cookie_value);
+",good
+250,commits,java,"String stmt=""INSERT INTO post(postID, username, hasImg, content) ""
+                + ""VALUES ('""
+                + newPost.getPostID() + ""', '""
+                + newPost.getUserID() + ""', ""
+                + newPost.isWithImgs() + "", '""
+                + newPost.getContent() + ""');"";
+",bad
+251,commits,good,"String stmt=""INSERT INTO post(postID, username, hasImg, content) VALUES (?, ?, ?, ?);"";
+PreparedStatement preparedStatement = DBInterface.getConnection().prepareStatement(stmt);
+preparedStatement.setString(1, newPost.getPostID());
+preparedStatement.setString(2, newPost.getUserID());
+preparedStatement.setBoolean(3, newPost.isWithImgs());
+preparedStatement.setString(4, newPost.getContent());
+DBInterface.executeStatement(preparedStatement);
+",good
+252,commits,java,"rs = st.executeQuery(""SELECT * FROM buchungsystem.hotel WHERE buchungsystem.hotel.name ilike "" + ""\'%"" + value + ""%\'"");
+",bad
+253,commits,good,"PreparedStatement pst = conn.prepareStatement(""SELECT * FROM buchungsystem.hotel WHERE buchungsystem.hotel.name ilike ?"");
+pst.setString(1, ""%"" + value + ""%"");
+rs = pst.executeQuery();
+",good
+254,commits,java,"String sql = ""UPDATE study_subject SET study_site_identifier= :study_site_identifier, ""
+    + ""payment_method_code=:pmCode, status_code= :status_code, date_last_updated=now(), ""
+    + ""assigned_identifier= :assigned_identifier, user_last_updated_id= :user_id, ""
+    + ""disease_identifier="" + ps.getDiseaseCode() + "", ""
+    + ""site_disease_identifier="" + ps.getSiteDiseaseCode() + "", ""
+    + ""registration_group_id= :registration_group_id, submission_type= :submission_type ""
+    + ""WHERE identifier= :identifier"";
+",bad
+255,commits,good,"String sql = ""UPDATE study_subject SET study_site_identifier= :study_site_identifier, ""
+    + ""payment_method_code=:pmCode, status_code= :status_code, date_last_updated=now(), ""
+    + ""assigned_identifier= :assigned_identifier, user_last_updated_id= :user_id, ""
+    + ""disease_identifier=:disease_identifier, ""
+    + ""site_disease_identifier=:site_disease_identifier, ""
+    + ""registration_group_id= :registration_group_id, submission_type= :submission_type ""
+    + ""WHERE identifier= :identifier"";
+
+queryObject.setParameter(""disease_identifier"", ps.getDiseaseCode());
+queryObject.setParameter(""site_disease_identifier"", ps.getSiteDiseaseCode());
+",good
+256,commits,java,"""where j.job_role_id = "" + id
+",bad
+257,commits,good,"PreparedStatement preparedStatement = conn.prepareStatement(
+                ""SELECT j.job_role_id, j.job_role_name, jfg.job_family_group_name, ""
+                + ""ml.management_level_name, j.sharepoint_link, ""
+                + ""j.specification_summary, j.responsibilities ""
+                + ""FROM job_role j ""
+                + ""JOIN job_family jf ON j.job_family_id = jf.job_family_id ""
+                + ""JOIN job_family_group jfg ON jf.job_family_group_id = jfg.job_family_group_id ""
+                + ""JOIN management_level ml ON j.management_level_id = ml.management_level_id ""
+                + ""where j.job_role_id = ?"");
+preparedStatement.setInt(1, id);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+258,commits,java,"String sql = ""insert into users set username='"" + username + ""', password='"" + password + ""';"";
+",bad
+259,commits,good,"public static void addUser(String username, String password) throws ClassNotFoundException, SQLException {
+    Class.forName(""com.mysql.jdbc.Driver"");
+
+    //Open special database connection...
+    Connection conn = DriverManager.getConnection(""jdbc:mysql://localhost:3306/users?allowMultiQueries=true"", ""root"", ""password"");
+
+    String sql = ""insert into users set username=?, password=?;"";
+    PreparedStatement st = conn.prepareStatement(sql);
+    st.setString(1, username);
+    st.setString(2, password);
+    st.executeUpdate();
+
+    st.close();
+    conn.close();
+}
+",good
+260,commits,java,"this.asyncMysql.queryUpdate(""INSERT INTO "" + OfflineInformationsSQL.table + "" (uuid, ingamename) VALUES ('"" + uuid.toString() + ""', '"" + ingameName + ""') ""
+				+ ""ON DUPLICATE KEY UPDATE ingamename='"" + ingameName + ""';"");
+",bad
+261,commits,good,"PreparedStatement statement = this.asyncMysql.getConnection().prepareStatement(
+    ""INSERT INTO "" + OfflineInformationsSQL.table + "" (uuid, ingamename) VALUES (?, ?) ""
+    + ""ON DUPLICATE KEY UPDATE ingamename=?;"");
+statement.setString(1, uuid.toString());
+statement.setString(2, ingameName);
+statement.setString(3, ingameName);
+statement.executeUpdate();
+",good
+262,commits,java,"String query = "" SELECT "" + columnNames + "" FROM "" + schema + ""."" + table
++ "" WHERE Date(LastModDate) >= '"" + lastDownloadDate + ""' "";
+",bad
+263,commits,good,"String query = ""SELECT ? FROM ?.? WHERE Date(LastModDate) >= ?"";
+List<Object> params = new ArrayList<>();
+params.add(columnNames);
+params.add(schema);
+params.add(table);
+params.add(lastDownloadDate);
+resultSetList = jdbcTemplate.queryForList(query, params.toArray());
+",good
+264,commits,java,"String checkQuery = ""SELECT count(*) AS Counter FROM information_schema.columns WHERE table_schema = '"" + this.databaseName + ""' and COLUMN_NAME = '"" + column + ""' AND table_name = '"" + table + ""' LIMIT 1;"";
+String executeQuery = ""ALTER TABLE "" + this.databaseName + "".`"" + table + ""` ADD COLUMN `"" + column + ""` "" + type + "";"";
+",bad
+265,commits,good,"String checkQuery = ""SELECT count(*) AS Counter FROM information_schema.columns WHERE table_schema = ? and COLUMN_NAME = ? AND table_name = ? LIMIT 1;"";
+PreparedStatement checkStatement = this.sql.getConnection().prepareStatement(checkQuery);
+checkStatement.setString(1, this.databaseName);
+checkStatement.setString(2, column);
+checkStatement.setString(3, table);
+
+String executeQuery = ""ALTER TABLE ?.? ADD COLUMN ? ?"";
+PreparedStatement executeStatement = this.sql.getConnection().prepareStatement(executeQuery);
+executeStatement.setString(1, this.databaseName);
+executeStatement.setString(2, table);
+executeStatement.setString(3, column);
+executeStatement.setString(4, type);
+",good
+266,commits,java,"stmt.executeQuery(""SELECT COUNT(*) USERCNT FROM TUNEUSER WHERE USERNAME = '"" + daf.getString(""username"") + ""'"");
+",bad
+267,commits,good,"stmt.executeUpdate(""INSERT INTO TUNEUSER (USERNAME,PASSWORD,BALANCE) VALUES ('"" + daf.getString(""username"") + ""','"" + daf.getString(""password"") + ""',0.00)"");
+",good
+268,commits,java,"StringTokenizer tokenizer = new StringTokenizer(inputSqlString, "" "");
+while (tokenizer.hasMoreTokens()) {
+    String token = tokenizer.nextToken().trim();
+    if (token.equals(""'"")) {
+        if (tokenizer.hasMoreElements()) {
+            String nextToken = tokenizer.nextToken().trim();
+            if (!nextToken.equals(""'"")) {
+                injectionFound = true;
+                break;
+            }
+        } else {
+            injectionFound = true;
+            break;
+        }
+    }
+    if (token.equals(""\"""")) {
+        if (tokenizer.hasMoreElements()) {
+            String nextToken = tokenizer.nextToken().trim();
+            if (!nextToken.equals(""\"""")) {
+                injectionFound = true;
+                break;
+            }
+        } else {
+            injectionFound = true;
+            break;
+        }
+    } else if (token.indexOf('=') > 0) {
+        StringTokenizer operatorToken = new StringTokenizer(token, ""="");
+        String operand = operatorToken.nextToken().trim();
+        if (!operatorToken.hasMoreTokens()) {
+            injectionFound = true;
+            break;
+        }
+        String value = operatorToken.nextToken().trim();
+        if (operand.equals(value)) {
+            injectionFound = true;
+            break;
+        }
+    }
+}
+",bad
+269,commits,good,"PreparedStatement statement = connection.prepareStatement(""SELECT * FROM users WHERE username = ?"");
+statement.setString(1, username);
+ResultSet resultSet = statement.executeQuery();
+",good
+270,commits,java,"rs = stmt.executeQuery(""SELECT property_value FROM global_property WHERE property = '"" + globalPropertyName + ""'"");
+",bad
+271,commits,good,"PreparedStatement stmt = connection.prepareStatement(""SELECT property_value FROM global_property WHERE property = ?"");
+stmt.setString(1, globalPropertyName);
+ResultSet rs = stmt.executeQuery();
+",good
+272,commits,java,"String Sql=""select * from peminjaman where tanggal_pinjam='""+harian.getSelectedItem()+""'"";
+",bad
+273,commits,good,"String Sql=""select * from peminjaman where tanggal_pinjam=?"";
+PreparedStatement pstmt = pkk.koneksi.konek().prepareStatement(Sql);
+pstmt.setString(1, (String) harian.getSelectedItem());
+ResultSet pinjam = pstmt.executeQuery();
+",good
+274,commits,java,"stmt.executeUpdate(""use ""+db_name);
+result = stmt.executeQuery(query);
+",bad
+275,commits,good,"PreparedStatement pstmt = conn.prepareStatement(query);
+result = pstmt.executeQuery();
+",good
+276,commits,java,"query = query.replace(""@"" + key, params.get(key)[0]);
+",bad
+277,commits,good,"statement = conn.prepareStatement(getSql(queryId, params));
+for (int i = 0; i < params.size(); i++) {
+    statement.setString(i + 1, params.get(i)[0]);
+}
+resultSet = statement.executeQuery();
+",good
+278,commits,java,"String s = ""0"";
+// ...
+if (convert.ConvertString(this.getCode(c)).contains(convert.ConvertString(txt)))
+    s += "" OR _id = "" + c.getString(0);
+// ...
+return getReadableDatabase().rawQuery(""SELECT * FROM BusLine WHERE ""+s, null);
+",bad
+279,commits,good,"public Cursor getBusSearch(String txt) {
+    String query = ""SELECT * FROM BusLine WHERE _id = ?"";
+    String[] selectionArgs = { txt };
+    return getReadableDatabase().query(""BusLine"", null, ""code LIKE ? OR name LIKE ?"", selectionArgs, null, null, null);
+}
+",good
+280,commits,java,"String userInput = getUserInput(); // Assume this method returns untrusted user input
+String query = ""SELECT * FROM users WHERE username = '"" + userInput + ""'"";
+",bad
+281,commits,good,"String userInput = getUserInput(); // Assume this method returns untrusted user input
+String query = ""SELECT * FROM users WHERE username = ?"";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, userInput);
+",good
+282,commits,java,"StringBuilder sb = new StringBuilder();
+sb.append(""create table if not exists \""""+typeName+""\"" (id integer, "");
+String prefix = """";
+for (int i = 0; i < keys.length; i++) {
+    sb.append(prefix);
+    prefix = "", "";
+    sb.append(keys[i]);
+    sb.append("" "");
+    sb.append(types[i]);
+}
+sb.append("");"");
+s.executeUpdate(sb.toString());
+",bad
+283,commits,good,"PreparedStatement pstmt = conn.prepareStatement(""create table if not exists ? (id integer, ?);"");
+pstmt.setString(1, typeName);
+StringBuilder sb = new StringBuilder();
+String prefix = """";
+for (int i = 0; i < keys.length; i++) {
+    sb.append(prefix);
+    prefix = "", "";
+    sb.append(""?"");
+    sb.append("" "");
+    sb.append(""?"");
+}
+pstmt.setString(2, sb.toString());
+for (int i = 0; i < keys.length; i++) {
+    pstmt.setString(3 + i * 2, keys[i]);
+    pstmt.setString(4 + i * 2, types[i]);
+}
+pstmt.executeUpdate();
+",good
+284,commits,java,"ps.setString(1, dn.subjectDN());
+ps.setString(2, dn.issuerDN());
+",bad
+285,commits,java,"""SHOW TABLE STATUS FROM companiondb LIKE '"" + tableName + ""';""
+",bad
+286,commits,good,"String query = ""SHOW TABLE STATUS FROM companiondb LIKE ?"";
+PreparedStatement pstmt = db.prepareStatement(query);
+pstmt.setString(1, tableName);
+ResultSet rs = pstmt.executeQuery();
+",good
+287,commits,java,"deckDao.isDeckValid(deck);
+deckDao.deckNameExists(name);
+deckDao.saveDeck(deck, userId);
+deckDao.getDeck(uuid);
+deckDao.getAllDecks();
+deckDao.getAllUserDecks(userId);
+deckDao.deleteDeck(deckId, userId);
+deckDao.searchDecks(userSearch);
+tagDao.isTagValid(tag);
+tagDao.tagNameExists(name);
+tagDao.saveTag(tag);
+tagDao.getTag(uuid);
+tagDao.getAllTags();
+tagDao.deleteTag(tag);
+tagDao.saveTagsFor(deck);
+tagDao.getTagsFor(deckId);
+tagDao.getDecksHavingTag(tag);
+tagDao.searchTags(userSearch);
+userDao.registerGuest(guestId);
+",bad
+288,commits,good,"String query = ""SELECT * FROM decks WHERE name = '"" + name + ""'"";
+",good
+289,commits,java,"String query = ""SELECT * FROM product WHERE LOWER(product_name) LIKE '%"" + input + ""%' OR LOWER(description) LIKE '%"" + input + ""%'"";
+",bad
+290,commits,good,"String query = ""SELECT * FROM product WHERE LOWER(product_name) LIKE :input OR LOWER(description) LIKE :input"";
+TypedQuery<Product> typedQuery = em.createQuery(query, Product.class);
+typedQuery.setParameter(""input"", ""%"" + input.toLowerCase(Locale.ROOT) + ""%"");
+List<Product> products = typedQuery.getResultList();
+return products;
+",good
+291,commits,java,"String ID = request.getParameter(""userID"");
+long userID = Long.parseLong(ID);
+User user = UserDB.selectUserforAdmin(userID);
+",bad
+292,commits,good,"String ID = request.getParameter(""userID"");
+long userID;
+try {
+    userID = Long.parseLong(ID);
+    User user = UserDB.selectUserforAdmin(userID);
+} catch (NumberFormatException e) {
+    // Handle invalid userID
+}
+",good
+293,commits,java,"String SQL = ""insert into Guitar values(""+id+"",'""+guitar.getName()+""',""+guitar.getAge()+"",'""
+                    +guitar.getDeveloperEmail()+""')"";
+",bad
+294,commits,good,"String SQL = ""insert into Guitar values(?, ?, ?, ?)"";
+PreparedStatement statement = connection.prepareStatement(SQL);
+statement.setInt(1, id);
+statement.setString(2, guitar.getName());
+statement.setInt(3, guitar.getAge());
+statement.setString(4, guitar.getDeveloperEmail());
+statement.executeUpdate();
+",good
+295,commits,java,"ResultSet rs = db.query(""SELECT * FROM user WHERE email = '"" + email + ""';"");
+",bad
+296,commits,good,"PreparedStatement stmt = db.prepareStatement(""SELECT * FROM user WHERE email = ?;"");
+stmt.setString(1, email);
+ResultSet rs = stmt.executeQuery();
+",good
+297,commits,java,"private String transformCondition(String columnName, String value) {
+    switch (columnName) {
+        case ""empno"":
+        case ""sal"":
+        case ""comm"":
+        case ""deptno"":
+            return columnName + "" = "" + value;
+        case ""ename"":
+        case ""job"":
+            return columnName + "" like '%"" + value + ""%'"";
+        case ""hiredate"":
+            return ""to_char("" + columnName + "",'yyyy-mm-dd') = '"" + value + ""'"";
+        default:
+            return null;
+    }
+}
+",bad
+298,commits,good,"private String transformCondition(String columnName, String value) {
+    switch (columnName) {
+        case ""empno"":
+        case ""sal"":
+        case ""comm"":
+        case ""deptno"":
+            return columnName + "" = ?"";
+        case ""ename"":
+        case ""job"":
+            return columnName + "" like ?"";
+        case ""hiredate"":
+            return ""to_char("" + columnName + "",'yyyy-mm-dd') = ?"";
+        default:
+            return null;
+    }
+}
+",good
+299,commits,java,"sb.append(parentJoinValue.toString());
+",bad
+300,commits,good,"sb.append(quote(parentJoinValue.toString()));
+",good
+301,commits,java,"String tableName = tablesRs.getString(""TABLE_NAME"");
+if (!options.accept(TABLE_TYPE, tableName)) {
+    continue;
+}
+",bad
+302,commits,java,"stmt.execute(String.format(""SELECT * FROM economy WHERE username = '%s'"", nick.toLowerCase()));
+",bad
+303,commits,good,"PreparedStatement pstmt = db.prepareStatement(""SELECT * FROM economy WHERE username = ?"");
+pstmt.setString(1, nick.toLowerCase());
+pstmt.execute();
+ResultSet rs = pstmt.getResultSet();
+",good
+304,commits,java,"public abstract ResultSet executeQuery(String query);
+public abstract boolean executeUpdate(String update);
+",bad
+305,commits,good,"public abstract PreparedStatement prepareStatement(String sql) throws SQLException;
+
+// Usage
+PreparedStatement stmt = connection.prepareStatement(""SELECT * FROM users WHERE username = ?"");
+stmt.setString(1, username);
+ResultSet rs = stmt.executeQuery();
+",good
+306,commits,java,"statement.executeUpdate(String.format(DDL_CREATE_SCHEMA, name));
+",bad
+307,commits,good,"try (Connection connection = dataSource.getConnection();
+     PreparedStatement statement = connection.prepareStatement(DDL_CREATE_SCHEMA)) {
+    statement.setString(1, name);
+    statement.executeUpdate();
+} catch (SQLException e) {
+    throw new RuntimeException(""Can not connect to database"", e);
+}
+",good
+308,commits,java,"ps = connection.prepareStatement(""create database '"" + path + ""' collation 'UTF8'"");
+",bad
+309,commits,good,"ps = connection.prepareStatement(""create database ? collation 'UTF8'"");
+ps.setString(1, path);
+",good
+310,commits,java,"command = ""UPDATE Episode SET episodeName=\""The Office Pilot Ep. 1: The Office Field Guide\"" WHERE seasonID=1 AND episodeNumber=1;"";
+stmt.executeQuery(command);
+",bad
+311,commits,good,"PreparedStatement pstmt = connection.prepareStatement(""UPDATE Episode SET episodeName=? WHERE seasonID=? AND episodeNumber=?"");
+pstmt.setString(1, ""The Office Pilot Ep. 1: The Office Field Guide"");
+pstmt.setInt(2, 1);
+pstmt.setInt(3, 1);
+pstmt.executeUpdate();
+",good
+312,commits,java,"String SQL = ""INSERT INTO ["" + super.getTable() + ""] (Name, LastName, Email, PasswordHash, DateOfBirth, "" +
+                    ""UserRoleId, CreatedAt) VALUES('"" + user.getName() + ""','"" +
+                    user.getLastName() + ""','"" + user.getEmail() + ""','"" +
+                    user.getPasswordHash() + ""','"" + dateFormat.format(user.getDateOfBirth()) + ""','"" +
+                    user.getUserRoleld() + ""','"" + Instant.now().toString() + ""')"";
+",bad
+313,commits,good,"String SQL = ""INSERT INTO ["" + super.getTable() + ""] (Name, LastName, Email, PasswordHash, DateOfBirth, "" +
+                    ""UserRoleId, CreatedAt) VALUES(?, ?, ?, ?, ?, ?, ?)"";
+
+try (PreparedStatement stmt = con.prepareStatement(SQL)) {
+    stmt.setString(1, user.getName());
+    stmt.setString(2, user.getLastName());
+    stmt.setString(3, user.getEmail());
+    stmt.setString(4, user.getPasswordHash());
+    stmt.setString(5, dateFormat.format(user.getDateOfBirth()));
+    stmt.setInt(6, user.getUserRoleld());
+    stmt.setString(7, Instant.now().toString());
+    stmt.execute();
+}
+",good
+314,commits,java,"String sql = ""INSERT INTO users (name, password) VALUES ('"" + username + ""', '"" + passwd + ""');"";
+String sql = ""SELECT 1 FROM users WHERE name = '"" + username + ""' AND password = '"" + passwd + ""';"";
+String sql = ""SELECT 1 FROM users WHERE name = '"" + username + ""';"";
+",bad
+315,commits,good,"public void addData(String username, String passwd, String email) throws SQLException {
+    try {
+        String sql = ""INSERT INTO users (name, password) VALUES (?, ?);"";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, username);
+        pstmt.setString(2, passwd);
+        pstmt.executeUpdate();
+        System.out.println(""data created successfully"");
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+",good
+316,commits,java,"sql.append(String.format("" AND p.id=%s "", StringEscapeUtils.escapeSql(criteria.getId())));
+",bad
+317,commits,good,"sql.append("" AND p.id=:id"");
+query.setParameter(""id"", criteria.getId());
+",good
+318,commits,java,"String.format(""INSERT INTO spaces(space_id, name, owner) VALUES ('%d', '%s', '%s')"",
+                    spaceId, spaceName, owner)
+",bad
+319,commits,good,"database.updateUnique(""INSERT INTO spaces(space_id, name, owner) VALUES (?, ?, ?)"",
+                    spaceId, spaceName, owner);
+",good
+320,commits,java,"new UserDAO().getAccount( inputName, passwordField.getText() )
+",bad
+321,commits,good,"new UserDAO().getAccount( inputName, passwordField.getText(), true )
+",good
+322,commits,java,"String sql = ""select * from peminjaman WHERE kode_peminjaman LIKE '%""+carii+""%'OR judul_buku LIKE '""+carii+""'"" ;
+",bad
+323,commits,good,"String sql = ""select * from peminjaman WHERE kode_peminjaman LIKE ? OR judul_buku LIKE ?"";
+PreparedStatement statement = pkk.koneksi.konek().prepareStatement(sql);
+statement.setString(1, ""%"" + carii + ""%"");
+statement.setString(2, ""%"" + carii + ""%"");
+ResultSet cari = statement.executeQuery();
+",good
+324,commits,java,"String sql = ""INSERT INTO siswa VALUES ('""+nis.getText()+""','""+nama.getText()+""','""+kelas.getText()+""')"";
+String sql = ""delete from siswa where nis= '""+nis.getText()+""'"";
+String sql = ""update siswa set nama='""+nama.getText()+""',kelas='""+kelas.getText()+""' where nis='""+nis.getText()+""'"";
+String sql = ""select * from siswa WHERE nama LIKE '%""+carii+""%'OR kelas LIKE '""+carii+""'"";
+",bad
+325,commits,good,"PreparedStatement preparedStatement = connection.prepareStatement(""INSERT INTO siswa VALUES (?, ?, ?)"");
+preparedStatement.setString(1, nis.getText());
+preparedStatement.setString(2, nama.getText());
+preparedStatement.setString(3, kelas.getText());
+preparedStatement.executeUpdate();
+
+PreparedStatement preparedStatement = connection.prepareStatement(""DELETE FROM siswa WHERE nis = ?"");
+preparedStatement.setString(1, nis.getText());
+preparedStatement.executeUpdate();
+
+PreparedStatement preparedStatement = connection.prepareStatement(""UPDATE siswa SET nama = ?, kelas = ? WHERE nis = ?"");
+preparedStatement.setString(1, nama.getText());
+preparedStatement.setString(2, kelas.getText());
+preparedStatement.setString(3, nis.getText());
+preparedStatement.executeUpdate();
+
+PreparedStatement preparedStatement = connection.prepareStatement(""SELECT * FROM siswa WHERE nama LIKE ? OR kelas LIKE ?"");
+preparedStatement.setString(1, ""%"" + carii + ""%"");
+preparedStatement.setString(2, carii);
+ResultSet cari = preparedStatement.executeQuery();
+",good
+326,commits,java,"final String vulnerableQuery =
+    String.format(""SELECT * FROM sqlinjection.users WHERE name = '%s'"", injectionQuery);
+",bad
+327,commits,good,"final String vulnerableQuery =
+    ""SELECT * FROM sqlinjection.users WHERE name = ?"";
+
+return databaseClient.sql(vulnerableQuery)
+    .bind(0, injectionQuery)
+    .map(MAPPING_FUNCTION)
+    .all();
+",good
+328,commits,java,"keyword = keyword.replaceAll(pattern, """");
+wheresql = "" where moviename like '%""+keyword+""%' or description like '%""+keyword+""%' "";
+",bad
+329,commits,good,"keyword = keyword.replaceAll(pattern, """");
+wheresql = "" where moviename like ? or description like ?"";
+List<Movies> list = moviesManager.findByCondition(wheresql, ""%"" + keyword + ""%"", ""%"" + keyword + ""%"").getResultlist();
+",good
+330,commits,java,"String columnDataTypeQuery = String.format(SELECT_DATA_TYPE_STRING, sourceTableName.getPrefix().get().getPrefix().get(), sourceTableName.getSuffix(), columnName);
+",bad
+331,commits,good,"String columnDataTypeQuery = String.format(SELECT_DATA_TYPE_STRING, sourceTableName.getPrefix().get().getPrefix().get(), sourceTableName.getSuffix(), sanitizeInput(columnName));
+
+// Add a method to sanitize input
+private String sanitizeInput(String input) {
+    // Implement input sanitization logic here
+    // This could include escaping special characters, validating input, etc.
+}
+",good
+332,commits,java,"jobIdByNameQuery += "" AND "" + timeRangeFilter;
+",bad
+333,commits,good,"jobIdByNameQuery += "" AND start_time > ? AND end_time < ?"";
+// ...
+queryStatement.setTimestamp(1, startTimestamp);
+queryStatement.setTimestamp(2, endTimestamp);
+",good
+334,commits,java,"String sql = ""SELECT * FROM cachedResultsQuery WHERE alias=? OR queryId=? OR view=?"";
+",bad
+335,commits,good,"String sql = ""SELECT * FROM cachedResultsQuery WHERE alias=? OR queryId=? OR view=?"";
+try (PreparedStatement statement = localConnection.prepareStatement(sql)) {
+    statement.setString(1, id);
+    statement.setString(2, id);
+    statement.setString(3, id);
+    // rest of the code
+}
+",good
+336,commits,java,"final String query = String.format(""SELECT * FROM %s WHERE %s = '%s'; "",
+                DatabaseHelper.ACCOUNTS_TABLE,
+                DatabaseHelper.USERNAME_COL, username);
+",bad
+337,commits,good,"final String query = ""SELECT * FROM "" + DatabaseHelper.ACCOUNTS_TABLE + "" WHERE "" + DatabaseHelper.USERNAME_COL + "" = ?;"";
+String[] selectionArgs = { username };
+try (DatabaseHelper dbHelper = DatabaseHelper.getInstance(context);
+     SQLiteDatabase db = dbHelper.getReadableDatabase()) {
+
+    try (Cursor cursor = db.query(DatabaseHelper.ACCOUNTS_TABLE, null, DatabaseHelper.USERNAME_COL + "" = ?"", selectionArgs, null, null, null)) {
+        if (cursor.getCount() > 0) {
+            return false;
+        }
+    }
+    catch (SQLiteException e) {
+        return false;
+    }
+}
+catch (SQLiteException e) {
+    return false;
+}
+",good
+338,commits,java,"String copySql = String.format(""copy %s to STDOUT DELIMITER ',' CSV HEADER"", filterSql);
+",bad
+339,commits,good,"private TableLoadResult export (Table table, String filterSql) {
+    long startTime = System.currentTimeMillis();
+    TableLoadResult tableLoadResult = new TableLoadResult();
+    try {
+        // Create entry for table
+        String textFileName = table.name + "".txt"";
+        ZipEntry zipEntry = new ZipEntry(textFileName);
+        zipOutputStream.putNextEntry(zipEntry);
+
+        // don't let CSVWriter close the stream when it is garbage-collected
+        OutputStream protectedOut = new FilterOutputStream(zipOutputStream);
+        String copySql;
+        if (filterSql == null) {
+            // If there is no filter SQL specified, simply copy out the whole table.
+            copySql = String.format(""copy %s.%s to STDOUT DELIMITER ',' CSV HEADER"", feedIdToExport, table.name);
+        } else {
+            // Surround filter SQL in parentheses.
+            copySql = ""copy ("" + filterSql + "") to STDOUT DELIMITER ',' CSV HEADER"";
+        }
+        LOG.info(copySql);
+        // Our connection pool wraps the Connection objects, so we need to unwrap the Postgres connection interface.
+        CopyManager copyManager = new CopyManager(connection.unwrap(BaseConnection.class));
+        PreparedStatement statement = connection.prepareStatement(copySql);
+        tableLoadResult.rowCount = (int) copyManager.copyOut(statement, protectedOut);
+        if (tableLoadResult.rowCount == 0) {
+            // If no rows were exported, keep track of table name for later removal.
+            emptyTableList.add(textFileName);
+        }
+        zipOutputStream.closeEntry();
+        LOG.info(""Copied {} {} in {} ms."", tableLoadResult.rowCount, table.name, System.currentTimeMillis() - startTime);
+        connection.commit();
+    } catch (SQLException | IOException e) {
+        // Rollback connection so that fatal exception does not impact loading of other tables.
+        try {
+            connection.rollback();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        tableLoadResult.fatalException = e.getMessage();
+        LOG.error(""Exception while exporting tables"", e);
+    }
+    return tableLoadResult;
+}
+",good
+340,commits,java,"stmnt.addFilter(col + "" = '"" + o.toString() + ""'"");
+",bad
+341,commits,good,"stmnt.addFilter(col + "" = ?"");
+dbQuery.setObject(1, o);
+",good
+342,commits,java,"String queryString = getQueryForAirportLatLonInfo(airportId);
+",bad
+343,commits,good,"private static String getQueryForAirportLatLonInfo(String airportId) {
+    StringBuilder query = new StringBuilder(""select airport.latitude, airport.longitude "");
+    query.append("" from mapdata.airport airport where "")
+         .append(""airport.arpt_id=?"");
+    return query.toString();
+}
+
+private static LatLonInfo retrieveAirportLatLonInfoFromDB(String airportId) {
+    LatLonInfo latLonObj = new LatLonInfo();
+    DaoConfig mapsDbDaoConfig = DaoConfig.forDatabase(""maps"");
+    AwwVtecDao awwVtecDao = new AwwVtecDao(mapsDbDaoConfig);
+    String nativeSQLQuery = getQueryForAirportLatLonInfo(airportId);
+    QueryResult queryResult = awwVtecDao.getQueryResultByNativeSQLQuery(nativeSQLQuery, new Object[]{airportId});
+    // rest of the method...
+}
+",good
+344,commits,java,"ResultSet rs = st.executeQuery(""select userId, permission from IoT_USERS where userId = '"" + userId + ""' and password = '"" + hashPassword(password.toCharArray()) + ""'"");
+",bad
+345,commits,good,"PreparedStatement st = connection.prepareStatement(""select userId, permission from IoT_USERS where userId = ? and password = ?"");
+st.setString(1, userId);
+st.setString(2, hashPassword(password.toCharArray()));
+ResultSet rs = st.executeQuery();
+",good
+346,commits,java,"String query = ""SELECT * FROM "" + TABLE_NAME +
+                "" WHERE _id="" + idContact;
+",bad
+347,commits,good,"String query = ""SELECT * FROM "" + TABLE_NAME +
+                "" WHERE _id=?"";
+Cursor cursor = db.rawQuery(query, new String[]{idContact});
+",good
+348,commits,java,"String where = "" username='"" + username + ""' "";
+",bad
+349,commits,good,"String where = "" username=? "";
+// ...
+try {
+    return helper.fetchPage(sqlCountRows + where, sqlFetchRows + where, new Object[]{username}, pageNo, pageSize, ROLE_INFO_ROW_MAPPER);
+}
+",good
+350,commits,java,"String SQL = ""INSERT INTO "" + super.getTable() + "" (Discussion, ForumTopicId, UserId, CreatedAt)""
+                + "" VALUES('"" + comment.getDiscussion() + ""','"" + comment.getForumTopicId() + ""','"" +
+                comment.getUserId() + ""','"" + Instant.now().toString() + ""')"";
+",bad
+351,commits,good,"String SQL = ""INSERT INTO "" + super.getTable() + "" (Discussion, ForumTopicId, UserId, CreatedAt)""
+                + "" VALUES(?, ?, ?, ?)"";
+
+try (PreparedStatement stmt = con.prepareStatement(SQL)) {
+    stmt.setString(1, comment.getDiscussion());
+    stmt.setInt(2, comment.getForumTopicId());
+    stmt.setInt(3, comment.getUserId());
+    stmt.setTimestamp(4, Timestamp.from(Instant.now()));
+    stmt.executeUpdate();
+}
+",good
+352,commits,java,"String sql = ""UPDATE ep_widget_catalog_role SET app_id = "" + role.getApp().getAppId() + "" WHERE widget_id = "" + widgetId + "" AND ROLE_ID = "" + role.getRoleId() ;
+",bad
+353,commits,good,"String sql = ""UPDATE ep_widget_catalog_role SET app_id = :appId WHERE widget_id = :widgetId AND ROLE_ID = :roleId"";
+Query query = session.createSQLQuery(sql);
+query.setParameter(""appId"", role.getApp().getAppId());
+query.setParameter(""widgetId"", widgetId);
+query.setParameter(""roleId"", role.getRoleId());
+query.executeUpdate();
+",good
+354,commits,java,"return this.rc.executeQuery(""SELECT * FROM ""+table+"" WHERE id = "" + idCode()+"";"");
+",bad
+355,commits,good,"return this.rc.executeQuery(""SELECT * FROM "" + table + "" WHERE id = ?;"", idCode());
+",good
+356,commits,java,"String query = ""SELECT * FROM users"";
+ResultSet rs = stmt.executeQuery(query);
+",bad
+357,commits,good,"String userId = getUserIdFromUserInput(); // This function should sanitize the input
+String query = ""SELECT * FROM users WHERE id = ?"";
+PreparedStatement pstmt = conn.prepareStatement(query);
+pstmt.setInt(1, Integer.parseInt(userId));
+ResultSet rs = pstmt.executeQuery();
+",good
+358,commits,java,"String sql = ""select addr_id from address""
+        + "" where lower(ADDR_STREET1) = '"" + ba1.toLowerCase().trim() + ""'""
+        + "" and lower(ADDR_STREET2) = '"" + ba2.toLowerCase().trim() + ""'""
+        + "" and lower(ADDR_CITY) = '"" + bc.toLowerCase().trim() + ""'""
+        + "" and lower(ADDR_STATE) = '"" + bs.toLowerCase().trim() + ""'""
+        + "" and lower(ADDR_ZIP) = '"" + bz.toLowerCase().trim() + ""'""
+        + "" and ADDR_CO_ID = "" + addr_co_id;
+",bad
+359,commits,good,"private synchronized long getAddressID(Connection conn, NewCustomerInput input) throws SQLException {
+    long addId = -1;
+    long addr_co_id = getCOID(conn, input);
+    if (addr_co_id != -1) {
+        String ba1 = input.getBillingAddr1();
+        String ba2 = input.getBillingAddr2();
+        String bc = input.getBillingCity();
+        String bs = input.getBillingState();
+        String bz = input.getBillingZip();
+        String sql = ""select addr_id from address""
+                + "" where lower(ADDR_STREET1) = ?""
+                + "" and lower(ADDR_STREET2) = ?""
+                + "" and lower(ADDR_CITY) = ?""
+                + "" and lower(ADDR_STATE) = ?""
+                + "" and lower(ADDR_ZIP) = ?""
+                + "" and ADDR_CO_ID = ?"";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, ba1.toLowerCase().trim());
+        pstmt.setString(2, ba2.toLowerCase().trim());
+        pstmt.setString(3, bc.toLowerCase().trim());
+        pstmt.setString(4, bs.toLowerCase().trim());
+        pstmt.setString(5, bz.toLowerCase().trim());
+        pstmt.setLong(6, addr_co_id);
+        ResultSet rs = pstmt.executeQuery();
+        // rest of the code...
+    }
+    return addId;
+}
+",good
+360,commits,java,"connection = DriverManager.getConnection(FalconHeavy.getConfig().getUrl(),
+                FalconHeavy.getConfig().getSqlID(),
+                FalconHeavy.getConfig().getSqlPassword());
+",bad
+361,commits,good,"private static boolean connect() {
+    try {
+        System.out.println(""Connecting to Database: "" + FalconHeavy.getConfig().getUrl());
+        String url = FalconHeavy.getConfig().getUrl();
+        String sqlID = FalconHeavy.getConfig().getSqlID();
+        String sqlPassword = FalconHeavy.getConfig().getSqlPassword();
+        connection = DriverManager.getConnection(url, sqlID, sqlPassword);
+        return validate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+",good
+362,commits,java,"ResultSet rs = db.query(""SELECT * FROM companiondb.characterInfoView WHERE iduser = "" + userID + "" AND status = 'aktiv';"");
+",bad
+363,commits,good,"PreparedStatement stmt = db.prepareStatement(""SELECT * FROM companiondb.characterInfoView WHERE iduser = ? AND status = 'aktiv';"");
+stmt.setInt(1, userID);
+ResultSet rs = stmt.executeQuery();
+",good

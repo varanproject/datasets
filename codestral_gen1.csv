@@ -1,0 +1,914 @@
+,identifier,language,code,label
+0,codestral_gen_0,java,"String query = ""UPDATE products SET quantity = quantity - "" + quantity + "" WHERE id = "" + id;
+statement.executeUpdate(query);
+",bad
+1,codestral_gen_1,java,"String query = ""UPDATE products SET quantity = quantity - ? WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, quantity);
+preparedStatement.setInt(2, id);
+preparedStatement.executeUpdate();
+",good
+2,codestral_gen_2,java,"String query = ""DELETE FROM posts WHERE id = "" + postId;
+statement.executeUpdate(query);
+",bad
+3,codestral_gen_3,java,"String query = ""DELETE FROM posts WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, postId);
+preparedStatement.executeUpdate();
+",good
+4,codestral_gen_4,java,"String query = ""INSERT INTO comments (post_id, user_id, content) VALUES ("" + postId + "", "" + userId + "", '"" + content + ""')"";
+statement.executeUpdate(query);
+",bad
+5,codestral_gen_5,java,"String query = ""INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, postId);
+preparedStatement.setInt(2, userId);
+preparedStatement.setString(3, content);
+preparedStatement.executeUpdate();
+",good
+6,codestral_gen_6,java,"String query = ""SELECT * FROM jobs WHERE title LIKE '%"" + keyword + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+7,codestral_gen_7,java,"String query = ""SELECT * FROM jobs WHERE title LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + keyword + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+8,codestral_gen_8,java,"String query = ""SELECT * FROM books WHERE author = '"" + author + ""' OR title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+9,codestral_gen_9,java,"String query = ""SELECT * FROM books WHERE author = ? OR title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, author);
+preparedStatement.setString(2, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+10,codestral_gen_10,java,"String query = ""INSERT INTO workouts (user_id, exercise, duration, date) VALUES ("" + userId + "", '"" + exercise + ""', "" + duration + "", '"" + date + ""')"";
+statement.executeUpdate(query);
+",bad
+11,codestral_gen_11,java,"String query = ""INSERT INTO workouts (user_id, exercise, duration, date) VALUES (?, ?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, exercise);
+preparedStatement.setInt(3, duration);
+preparedStatement.setDate(4, date);
+preparedStatement.executeUpdate();
+",good
+12,codestral_gen_12,java,"String query = ""SELECT * FROM weather_data WHERE location = '"" + location + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+13,codestral_gen_13,java,"String query = ""SELECT * FROM weather_data WHERE location = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, location);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+14,codestral_gen_14,java,"String query = ""SELECT * FROM recipes WHERE ingredients LIKE '%"" + ingredient + ""%' OR cuisine = '"" + cuisine + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+15,codestral_gen_15,java,"String query = ""SELECT * FROM recipes WHERE ingredients LIKE ? OR cuisine = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + ingredient + ""%"");
+preparedStatement.setString(2, cuisine);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+16,codestral_gen_16,java,"String query = ""SELECT * FROM songs WHERE title = '"" + title + ""' OR artist = '"" + artist + ""' OR genre = '"" + genre + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+17,codestral_gen_17,java,"String query = ""SELECT * FROM songs WHERE title = ? OR artist = ? OR genre = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, artist);
+preparedStatement.setString(3, genre);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+18,codestral_gen_18,java,"String query = ""SELECT * FROM flights WHERE destination = '"" + destination + ""' AND departure_date = '"" + departureDate + ""' AND available_seats >= "" + numPassengers;
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+19,codestral_gen_19,java,"String query = ""SELECT * FROM flights WHERE destination = ? AND departure_date = ? AND available_seats >= ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, destination);
+preparedStatement.setString(2, departureDate);
+preparedStatement.setInt(3, numPassengers);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+20,codestral_gen_20,java,"String query = ""INSERT INTO messages (user_id, message_text) VALUES ("" + userId + "", '"" + messageText + ""')"";
+statement.executeUpdate(query);
+",bad
+21,codestral_gen_21,java,"String query = ""INSERT INTO messages (user_id, message_text) VALUES (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, messageText);
+preparedStatement.executeUpdate();
+",good
+22,codestral_gen_22,java,"String query = ""UPDATE job_applications SET status = '"" + status + ""' WHERE job_id = "" + jobId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+23,codestral_gen_23,java,"String query = ""UPDATE job_applications SET status = ? WHERE job_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, status);
+preparedStatement.setInt(2, jobId);
+preparedStatement.setInt(3, userId);
+preparedStatement.executeUpdate();
+",good
+24,codestral_gen_24,java,"String query = ""DELETE FROM workouts WHERE user_id = "" + userId + "" AND workout_id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+25,codestral_gen_25,java,"String query = ""DELETE FROM workouts WHERE user_id = ? AND workout_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+26,codestral_gen_26,java,"String query = ""SELECT * FROM recipes WHERE title LIKE '%"" + searchTerm + ""%' OR ingredients LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+27,codestral_gen_27,java,"String query = ""SELECT * FROM recipes WHERE title LIKE ? OR ingredients LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+preparedStatement.setString(2, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+28,codestral_gen_28,java,"String query = ""INSERT INTO reviews (user_id, movie_id, rating, review_text) VALUES ("" + userId + "", "" + movieId + "", "" + rating + "", '"" + reviewText + ""')"";
+statement.executeUpdate(query);
+",bad
+29,codestral_gen_29,java,"String query = ""INSERT INTO reviews (user_id, movie_id, rating, review_text) VALUES (?, ?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, movieId);
+preparedStatement.setInt(3, rating);
+preparedStatement.setString(4, reviewText);
+preparedStatement.executeUpdate();
+",good
+30,codestral_gen_30,java,"String query = ""SELECT * FROM cars WHERE location = '"" + location + ""' AND make = '"" + make + ""' AND model = '"" + model + ""' AND rental_duration = "" + rentalDuration;
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+31,codestral_gen_31,java,"String query = ""SELECT * FROM cars WHERE location = ? AND make = ? AND model = ? AND rental_duration = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, location);
+preparedStatement.setString(2, make);
+preparedStatement.setString(3, model);
+preparedStatement.setInt(4, rentalDuration);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+32,codestral_gen_32,java,"String query = ""UPDATE users SET language = '"" + language + ""', level = '"" + level + ""' WHERE user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+33,codestral_gen_33,java,"String query = ""UPDATE users SET language = ?, level = ? WHERE user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, language);
+preparedStatement.setString(2, level);
+preparedStatement.setInt(3, userId);
+preparedStatement.executeUpdate();
+",good
+34,codestral_gen_34,java,"String query = ""INSERT INTO daily_stats (user_id, date, steps, calories, sleep) VALUES ("" + userId + "", '"" + date + ""', "" + steps + "", "" + calories + "", "" + sleep + "")"";
+statement.executeUpdate(query);
+",bad
+35,codestral_gen_35,java,"String query = ""INSERT INTO daily_stats (user_id, date, steps, calories, sleep) VALUES (?, ?, ?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, date);
+preparedStatement.setInt(3, steps);
+preparedStatement.setInt(4, calories);
+preparedStatement.setInt(5, sleep);
+preparedStatement.executeUpdate();
+",good
+36,codestral_gen_36,java,"String query = ""DELETE FROM posts WHERE post_id = "" + postId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+37,codestral_gen_37,java,"String query = ""DELETE FROM posts WHERE post_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, postId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+38,codestral_gen_38,java,"String query = ""SELECT * FROM jobs WHERE title LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+39,codestral_gen_39,java,"String query = ""SELECT * FROM jobs WHERE title LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+40,codestral_gen_40,java,"String query = ""INSERT INTO playlists (user_id, name) VALUES ("" + userId + "", '"" + playlistName + ""')"";
+statement.executeUpdate(query);
+",bad
+41,codestral_gen_41,java,"String query = ""INSERT INTO playlists (user_id, name) VALUES (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, playlistName);
+preparedStatement.executeUpdate();
+",good
+42,codestral_gen_42,java,"String query = ""UPDATE recipes SET title = '"" + title + ""', ingredients = '"" + ingredients + ""', instructions = '"" + instructions + ""' WHERE recipe_id = "" + recipeId;
+statement.executeUpdate(query);
+",bad
+43,codestral_gen_43,java,"String query = ""UPDATE recipes SET title = ?, ingredients = ?, instructions = ? WHERE recipe_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, ingredients);
+preparedStatement.setString(3, instructions);
+preparedStatement.setInt(4, recipeId);
+preparedStatement.executeUpdate();
+",good
+44,codestral_gen_44,java,"String query = ""SELECT * FROM flights WHERE destination = '"" + destination + ""' AND departure_date = '"" + departureDate + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+45,codestral_gen_45,java,"String query = ""SELECT * FROM flights WHERE destination = ? AND departure_date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, destination);
+preparedStatement.setString(2, departureDate);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+46,codestral_gen_46,java,"String query = ""SELECT * FROM users WHERE username = '"" + username + ""' AND password = '"" + password + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+47,codestral_gen_47,java,"String query = ""SELECT * FROM users WHERE username = ? AND password = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, username);
+preparedStatement.setString(2, password);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+48,codestral_gen_48,java,"String query = ""INSERT INTO posts (user_id, content) VALUES ("" + userId + "", '"" + content + ""')"";
+statement.executeUpdate(query);
+",bad
+49,codestral_gen_49,java,"String query = ""INSERT INTO posts (user_id, content) VALUES (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, content);
+preparedStatement.executeUpdate();
+",good
+50,codestral_gen_50,java,"String query = ""SELECT * FROM jobs WHERE title LIKE '%"" + searchTerm + ""%' OR description LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+51,codestral_gen_51,java,"String query = ""SELECT * FROM jobs WHERE title LIKE ? OR description LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+preparedStatement.setString(2, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+52,codestral_gen_52,java,"String query = ""UPDATE playlists SET name = '"" + newName + ""' WHERE id = "" + playlistId;
+statement.executeUpdate(query);
+",bad
+53,codestral_gen_53,java,"String query = ""UPDATE playlists SET name = ? WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, newName);
+preparedStatement.setInt(2, playlistId);
+preparedStatement.executeUpdate();
+",good
+54,codestral_gen_54,java,"String query = ""DELETE FROM workouts WHERE id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+55,codestral_gen_55,java,"String query = ""DELETE FROM workouts WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, workoutId);
+preparedStatement.executeUpdate();
+",good
+56,codestral_gen_56,java,"String query = ""SELECT * FROM recipes WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+57,codestral_gen_57,java,"String query = ""SELECT * FROM recipes WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+58,codestral_gen_58,java,"String query = ""SELECT * FROM cars WHERE make = '"" + make + ""' AND model = '"" + model + ""' AND year = "" + year;
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+59,codestral_gen_59,java,"String query = ""SELECT * FROM cars WHERE make = ? AND model = ? AND year = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, make);
+preparedStatement.setString(2, model);
+preparedStatement.setInt(3, year);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+60,codestral_gen_60,java,"String query = ""INSERT INTO bookings (user_id, flight_id, hotel_id, car_id) VALUES ("" + userId + "", "" + flightId + "", "" + hotelId + "", "" + carId + "")"";
+statement.executeUpdate(query);
+",bad
+61,codestral_gen_61,java,"String query = ""INSERT INTO bookings (user_id, flight_id, hotel_id, car_id) VALUES (?, ?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, flightId);
+preparedStatement.setInt(3, hotelId);
+preparedStatement.setInt(4, carId);
+preparedStatement.executeUpdate();
+",good
+62,codestral_gen_62,java,"String query = ""SELECT * FROM posts WHERE user_id = "" + userId + "" ORDER BY created_at DESC"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+63,codestral_gen_63,java,"String query = ""SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+64,codestral_gen_64,java,"String query = ""DELETE FROM workouts WHERE id = "" + workoutId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+65,codestral_gen_65,java,"String query = ""DELETE FROM workouts WHERE id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, workoutId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+66,codestral_gen_66,java,"String query = ""SELECT * FROM jobs WHERE title LIKE '%"" + searchTerm + ""%' OR description LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+67,codestral_gen_67,java,"String query = ""SELECT * FROM jobs WHERE title LIKE ? OR description LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+preparedStatement.setString(2, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+68,codestral_gen_68,java,"String query = ""INSERT INTO posts (user_id, content) VALUES ("" + userId + "", '"" + content + ""')"";
+statement.executeUpdate(query);
+",bad
+69,codestral_gen_69,java,"String query = ""INSERT INTO posts (user_id, content) VALUES (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, content);
+preparedStatement.executeUpdate();
+",good
+70,codestral_gen_70,java,"String query = ""SELECT * FROM books WHERE title = '"" + title + ""' OR author = '"" + author + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+71,codestral_gen_71,java,"String query = ""SELECT * FROM books WHERE title = ? OR author = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, author);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+72,codestral_gen_72,java,"String query = ""SELECT * FROM cars WHERE make = '"" + make + ""' AND model = '"" + model + ""' AND available = true"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+73,codestral_gen_73,java,"String query = ""SELECT * FROM cars WHERE make = ? AND model = ? AND available = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, make);
+preparedStatement.setString(2, model);
+preparedStatement.setBoolean(3, true);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+74,codestral_gen_74,java,"String query = ""SELECT * FROM movies WHERE title = '"" + title + ""' OR genre = '"" + genre + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+75,codestral_gen_75,java,"String query = ""SELECT * FROM movies WHERE title = ? OR genre = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, genre);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+76,codestral_gen_76,java,"String query = ""INSERT INTO recipes (title, ingredients, instructions) VALUES ('"" + title + ""', '"" + ingredients + ""', '"" + instructions + ""')"";
+statement.executeUpdate(query);
+",bad
+77,codestral_gen_77,java,"String query = ""INSERT INTO recipes (title, ingredients, instructions) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, ingredients);
+preparedStatement.setString(3, instructions);
+preparedStatement.executeUpdate();
+",good
+78,codestral_gen_78,java,"String query = ""UPDATE workouts SET duration = "" + duration + "" WHERE id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+79,codestral_gen_79,java,"String query = ""UPDATE workouts SET duration = ? WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+80,codestral_gen_80,java,"String query = ""SELECT * FROM flights WHERE destination = '"" + destination + ""' AND departure_date = '"" + departureDate + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+81,codestral_gen_81,java,"String query = ""SELECT * FROM flights WHERE destination = ? AND departure_date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, destination);
+preparedStatement.setDate(2, java.sql.Date.valueOf(departureDate));
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+82,codestral_gen_82,java,"String query = ""DELETE FROM applications WHERE job_id = "" + jobId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+83,codestral_gen_83,java,"String query = ""DELETE FROM applications WHERE job_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, jobId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+84,codestral_gen_84,java,"String query = ""INSERT INTO posts (user_id, content) VALUES ("" + userId + "", '"" + content + ""')"";
+statement.executeUpdate(query);
+",bad
+85,codestral_gen_85,java,"String query = ""INSERT INTO posts (user_id, content) VALUES (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, content);
+preparedStatement.executeUpdate();
+",good
+86,codestral_gen_86,java,"String query = ""UPDATE workouts SET duration = "" + duration + "" WHERE id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+87,codestral_gen_87,java,"String query = ""UPDATE workouts SET duration = ? WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+88,codestral_gen_88,java,"String query = ""SELECT * FROM books WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+89,codestral_gen_89,java,"String query = ""SELECT * FROM books WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+90,codestral_gen_90,java,"String query = ""SELECT * FROM songs WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+91,codestral_gen_91,java,"String query = ""SELECT * FROM songs WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+92,codestral_gen_92,java,"String query = ""INSERT INTO recipes (title, ingredients, instructions) VALUES ('"" + title + ""', '"" + ingredients + ""', '"" + instructions + ""')"";
+statement.executeUpdate(query);
+",bad
+93,codestral_gen_93,java,"String query = ""INSERT INTO recipes (title, ingredients, instructions) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, ingredients);
+preparedStatement.setString(3, instructions);
+preparedStatement.executeUpdate();
+",good
+94,codestral_gen_94,java,"String query = ""SELECT * FROM locations WHERE name = '"" + locationName + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+95,codestral_gen_95,java,"String query = ""SELECT * FROM locations WHERE name = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, locationName);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+96,codestral_gen_96,java,"String query = ""SELECT * FROM showtimes WHERE movie_id = "" + movieId + "" AND date = '"" + date + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+97,codestral_gen_97,java,"String query = ""SELECT * FROM showtimes WHERE movie_id = ? AND date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, movieId);
+preparedStatement.setDate(2, java.sql.Date.valueOf(date));
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+98,codestral_gen_98,java,"String query = ""UPDATE workouts SET duration = "" + duration + "" WHERE id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+99,codestral_gen_99,java,"String query = ""UPDATE workouts SET duration = ? WHERE id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+100,codestral_gen_100,java,"String query = ""INSERT INTO applications (job_id, user_id, status) VALUES ("" + jobId + "", "" + userId + "", 'pending')"";
+statement.executeUpdate(query);
+",bad
+101,codestral_gen_101,java,"String query = ""INSERT INTO applications (job_id, user_id, status) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, jobId);
+preparedStatement.setInt(2, userId);
+preparedStatement.setString(3, ""pending"");
+preparedStatement.executeUpdate();
+",good
+102,codestral_gen_102,java,"String query = ""DELETE FROM posts WHERE id = "" + postId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+103,codestral_gen_103,java,"String query = ""DELETE FROM posts WHERE id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, postId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+104,codestral_gen_104,java,"String query = ""SELECT * FROM books WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+105,codestral_gen_105,java,"String query = ""SELECT * FROM books WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+106,codestral_gen_106,java,"String query = ""UPDATE cars SET status = 'rented' WHERE id = "" + carId + "" AND status = 'available'"";
+statement.executeUpdate(query);
+",bad
+107,codestral_gen_107,java,"String query = ""UPDATE cars SET status = ? WHERE id = ? AND status = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""rented"");
+preparedStatement.setInt(2, carId);
+preparedStatement.setString(3, ""available"");
+preparedStatement.executeUpdate();
+",good
+108,codestral_gen_108,java,"String query = ""INSERT INTO bookings (flight_id, user_id, status) VALUES ("" + flightId + "", "" + userId + "", 'confirmed')"";
+statement.executeUpdate(query);
+",bad
+109,codestral_gen_109,java,"String query = ""INSERT INTO bookings (flight_id, user_id, status) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, flightId);
+preparedStatement.setInt(2, userId);
+preparedStatement.setString(3, ""confirmed"");
+preparedStatement.executeUpdate();
+",good
+110,codestral_gen_110,java,"String query = ""SELECT * FROM recipes WHERE title LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+111,codestral_gen_111,java,"String query = ""SELECT * FROM recipes WHERE title LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+112,codestral_gen_112,java,"String query = ""SELECT * FROM workouts WHERE user_id = "" + userId + "" AND date = '"" + date + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+113,codestral_gen_113,java,"String query = ""SELECT * FROM workouts WHERE user_id = ? AND date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setDate(2, java.sql.Date.valueOf(date));
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+114,codestral_gen_114,java,"String query = ""DELETE FROM applications WHERE job_id = "" + jobId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+115,codestral_gen_115,java,"String query = ""DELETE FROM applications WHERE job_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, jobId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+116,codestral_gen_116,java,"String query = ""INSERT INTO comments (post_id, user_id, comment_text) VALUES ("" + postId + "", "" + userId + "", '"" + commentText + ""')"";
+statement.executeUpdate(query);
+",bad
+117,codestral_gen_117,java,"String query = ""INSERT INTO comments (post_id, user_id, comment_text) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, postId);
+preparedStatement.setInt(2, userId);
+preparedStatement.setString(3, commentText);
+preparedStatement.executeUpdate();
+",good
+118,codestral_gen_118,java,"String query = ""UPDATE books SET availability = 'Borrowed' WHERE book_id = "" + bookId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+119,codestral_gen_119,java,"String query = ""UPDATE books SET availability = 'Borrowed' WHERE book_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, bookId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+120,codestral_gen_120,java,"String query = ""INSERT INTO playlists (playlist_name, user_id) VALUES ('"" + playlistName + ""', "" + userId + "")"";
+statement.executeUpdate(query);
+",bad
+121,codestral_gen_121,java,"String query = ""INSERT INTO playlists (playlist_name, user_id) VALUES (?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, playlistName);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+122,codestral_gen_122,java,"String query = ""DELETE FROM user_recipes WHERE recipe_id = "" + recipeId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+123,codestral_gen_123,java,"String query = ""DELETE FROM user_recipes WHERE recipe_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, recipeId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+124,codestral_gen_124,java,"String query = ""UPDATE workouts SET duration = "" + duration + "" WHERE workout_id = "" + workoutId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+125,codestral_gen_125,java,"String query = ""UPDATE workouts SET duration = ? WHERE workout_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.setInt(3, userId);
+preparedStatement.executeUpdate();
+",good
+126,codestral_gen_126,java,"String query = ""INSERT INTO bookings (user_id, flight_id, hotel_id, car_id) VALUES ("" + userId + "", "" + flightId + "", "" + hotelId + "", "" + carId + "")"";
+statement.executeUpdate(query);
+",bad
+127,codestral_gen_127,java,"String query = ""INSERT INTO bookings (user_id, flight_id, hotel_id, car_id) VALUES (?, ?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, flightId);
+preparedStatement.setInt(3, hotelId);
+preparedStatement.setInt(4, carId);
+preparedStatement.executeUpdate();
+",good
+128,codestral_gen_128,java,"String query = ""UPDATE orders SET status = '"" + status + ""' WHERE order_id = "" + orderId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+129,codestral_gen_129,java,"String query = ""UPDATE orders SET status = ? WHERE order_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, status);
+preparedStatement.setInt(2, orderId);
+preparedStatement.setInt(3, userId);
+preparedStatement.executeUpdate();
+",good
+130,codestral_gen_130,java,"String query = ""DELETE FROM rides WHERE ride_id = "" + rideId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+131,codestral_gen_131,java,"String query = ""DELETE FROM rides WHERE ride_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, rideId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+132,codestral_gen_132,java,"String query = ""INSERT INTO applications (job_id, user_id, resume) VALUES ("" + jobId + "", "" + userId + "", '"" + resume + ""')"";
+statement.executeUpdate(query);
+",bad
+133,codestral_gen_133,java,"String query = ""INSERT INTO applications (job_id, user_id, resume) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, jobId);
+preparedStatement.setInt(2, userId);
+preparedStatement.setString(3, resume);
+preparedStatement.executeUpdate();
+",good
+134,codestral_gen_134,java,"String query = ""SELECT * FROM posts WHERE user_id = "" + userId + "" ORDER BY created_at DESC"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+135,codestral_gen_135,java,"String query = ""SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+136,codestral_gen_136,java,"String query = ""SELECT * FROM workouts WHERE user_id = "" + userId + "" AND date = '"" + date + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+137,codestral_gen_137,java,"String query = ""SELECT * FROM workouts WHERE user_id = ? AND date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, date);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+138,codestral_gen_138,java,"String query = ""SELECT * FROM songs WHERE title LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+139,codestral_gen_139,java,"String query = ""SELECT * FROM songs WHERE title LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+140,codestral_gen_140,java,"String query = ""SELECT * FROM locations WHERE name = '"" + locationName + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+141,codestral_gen_141,java,"String query = ""SELECT * FROM locations WHERE name = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, locationName);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+142,codestral_gen_142,java,"String query = ""DELETE FROM recipes WHERE recipe_id = "" + recipeId + "" AND user_id = "" + userId;
+statement.executeUpdate(query);
+",bad
+143,codestral_gen_143,java,"String query = ""DELETE FROM recipes WHERE recipe_id = ? AND user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, recipeId);
+preparedStatement.setInt(2, userId);
+preparedStatement.executeUpdate();
+",good
+144,codestral_gen_144,java,"String query = ""SELECT * FROM flights WHERE destination = '"" + destination + ""' AND departure_date = '"" + departureDate + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+145,codestral_gen_145,java,"String query = ""SELECT * FROM flights WHERE destination = ? AND departure_date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, destination);
+preparedStatement.setString(2, departureDate);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+146,codestral_gen_146,java,"String query = ""UPDATE workouts SET duration = "" + duration + "" WHERE workout_id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+147,codestral_gen_147,java,"String query = ""UPDATE workouts SET duration = ? WHERE workout_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+148,codestral_gen_148,java,"String query = ""INSERT INTO users (username, password, email) VALUES ('"" + username + ""', '"" + password + ""', '"" + email + ""')"";
+statement.executeUpdate(query);
+",bad
+149,codestral_gen_149,java,"String query = ""INSERT INTO users (username, password, email) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, username);
+preparedStatement.setString(2, password);
+preparedStatement.setString(3, email);
+preparedStatement.executeUpdate();
+",good
+150,codestral_gen_150,java,"String query = ""SELECT * FROM jobs WHERE title LIKE '%"" + keyword + ""%' OR description LIKE '%"" + keyword + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+151,codestral_gen_151,java,"String query = ""SELECT * FROM jobs WHERE title LIKE ? OR description LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + keyword + ""%"");
+preparedStatement.setString(2, ""%"" + keyword + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+152,codestral_gen_152,java,"String query = ""SELECT * FROM songs WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+153,codestral_gen_153,java,"String query = ""SELECT * FROM songs WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+154,codestral_gen_154,java,"String query = ""SELECT * FROM recipes WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+155,codestral_gen_155,java,"String query = ""SELECT * FROM recipes WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+156,codestral_gen_156,java,"String query = ""DELETE FROM workouts WHERE workout_id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+157,codestral_gen_157,java,"String query = ""DELETE FROM workouts WHERE workout_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, workoutId);
+preparedStatement.executeUpdate();
+",good
+158,codestral_gen_158,java,"String query = ""SELECT * FROM cars WHERE make = '"" + make + ""' AND model = '"" + model + ""' AND location = '"" + location + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+159,codestral_gen_159,java,"String query = ""SELECT * FROM cars WHERE make = ? AND model = ? AND location = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, make);
+preparedStatement.setString(2, model);
+preparedStatement.setString(3, location);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+160,codestral_gen_160,java,"String query = ""SELECT * FROM movies WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+161,codestral_gen_161,java,"String query = ""SELECT * FROM movies WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+162,codestral_gen_162,java,"String query = ""INSERT INTO workouts (user_id, type, duration) VALUES ("" + userId + "", '"" + type + ""', "" + duration + "")"";
+statement.executeUpdate(query);
+",bad
+163,codestral_gen_163,java,"String query = ""INSERT INTO workouts (user_id, type, duration) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setString(2, type);
+preparedStatement.setInt(3, duration);
+preparedStatement.executeUpdate();
+",good
+164,codestral_gen_164,java,"String query = ""DELETE FROM posts WHERE user_id = "" + userId + "" AND post_id = "" + postId;
+statement.executeUpdate(query);
+",bad
+165,codestral_gen_165,java,"String query = ""DELETE FROM posts WHERE user_id = ? AND post_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, postId);
+preparedStatement.executeUpdate();
+",good
+166,codestral_gen_166,java,"String query = ""UPDATE jobs SET status = '"" + status + ""' WHERE job_id = "" + jobId;
+statement.executeUpdate(query);
+",bad
+167,codestral_gen_167,java,"String query = ""UPDATE jobs SET status = ? WHERE job_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, status);
+preparedStatement.setInt(2, jobId);
+preparedStatement.executeUpdate();
+",good
+168,codestral_gen_168,java,"String query = ""SELECT * FROM songs WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+169,codestral_gen_169,java,"String query = ""SELECT * FROM songs WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+170,codestral_gen_170,java,"String query = ""SELECT * FROM flights WHERE destination = '"" + destination + ""' AND departure_date = '"" + departureDate + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+171,codestral_gen_171,java,"String query = ""SELECT * FROM flights WHERE destination = ? AND departure_date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, destination);
+preparedStatement.setDate(2, departureDate);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+172,codestral_gen_172,java,"String query = ""INSERT INTO recipes (title, ingredients, instructions) VALUES ('"" + title + ""', '"" + ingredients + ""', '"" + instructions + ""')"";
+statement.executeUpdate(query);
+",bad
+173,codestral_gen_173,java,"String query = ""INSERT INTO recipes (title, ingredients, instructions) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+preparedStatement.setString(2, ingredients);
+preparedStatement.setString(3, instructions);
+preparedStatement.executeUpdate();
+",good
+174,codestral_gen_174,java,"String query = ""UPDATE workouts SET duration = "" + duration + "" WHERE workout_id = "" + workoutId;
+statement.executeUpdate(query);
+",bad
+175,codestral_gen_175,java,"String query = ""UPDATE workouts SET duration = ? WHERE workout_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+176,codestral_gen_176,java,"String query = ""SELECT * FROM cars WHERE location = '"" + location + ""' AND available = 1"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+177,codestral_gen_177,java,"String query = ""SELECT * FROM cars WHERE location = ? AND available = 1"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, location);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+178,codestral_gen_178,java,"String query = ""DELETE FROM posts WHERE user_id = "" + userId + "" AND post_id = "" + postId;
+statement.executeUpdate(query);
+",bad
+179,codestral_gen_179,java,"String query = ""DELETE FROM posts WHERE user_id = ? AND post_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, postId);
+preparedStatement.executeUpdate();
+",good
+180,codestral_gen_180,java,"String query = ""INSERT INTO products (name, price, description) VALUES ('"" + name + ""', '"" + price + ""', '"" + description + ""')"";
+statement.executeUpdate(query);
+",bad
+181,codestral_gen_181,java,"String query = ""INSERT INTO products (name, price, description) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, name);
+preparedStatement.setDouble(2, price);
+preparedStatement.setString(3, description);
+preparedStatement.executeUpdate();
+",good
+182,codestral_gen_182,java,"String query = ""UPDATE workouts SET duration = '"" + duration + ""', calories_burned = '"" + caloriesBurned + ""' WHERE user_id = '"" + userId + ""' AND workout_id = '"" + workoutId + ""'"";
+statement.executeUpdate(query);
+",bad
+183,codestral_gen_183,java,"String query = ""UPDATE workouts SET duration = ?, calories_burned = ? WHERE user_id = ? AND workout_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, duration);
+preparedStatement.setInt(2, caloriesBurned);
+preparedStatement.setInt(3, userId);
+preparedStatement.setInt(4, workoutId);
+preparedStatement.executeUpdate();
+",good
+184,codestral_gen_184,java,"String query = ""SELECT * FROM jobs WHERE title LIKE '%"" + searchTerm + ""%'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+185,codestral_gen_185,java,"String query = ""SELECT * FROM jobs WHERE title LIKE ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, ""%"" + searchTerm + ""%"");
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+186,codestral_gen_186,java,"String query = ""SELECT * FROM recipes WHERE category = '"" + category + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+187,codestral_gen_187,java,"String query = ""SELECT * FROM recipes WHERE category = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, category);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+188,codestral_gen_188,java,"String query = ""SELECT * FROM flights WHERE destination = '"" + destination + ""' AND departure_date = '"" + departureDate + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+189,codestral_gen_189,java,"String query = ""SELECT * FROM flights WHERE destination = ? AND departure_date = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, destination);
+preparedStatement.setDate(2, java.sql.Date.valueOf(departureDate));
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+190,codestral_gen_190,java,"String query = ""SELECT * FROM songs WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+191,codestral_gen_191,java,"String query = ""SELECT * FROM songs WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+192,codestral_gen_192,java,"String query = ""DELETE FROM workouts WHERE user_id = '"" + userId + ""' AND workout_id = '"" + workoutId + ""'"";
+statement.executeUpdate(query);
+",bad
+193,codestral_gen_193,java,"String query = ""DELETE FROM workouts WHERE user_id = ? AND workout_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+preparedStatement.setInt(2, workoutId);
+preparedStatement.executeUpdate();
+",good
+194,codestral_gen_194,java,"String query = ""SELECT * FROM posts WHERE user_id = '"" + userId + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+195,codestral_gen_195,java,"String query = ""SELECT * FROM posts WHERE user_id = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, userId);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
+196,codestral_gen_196,java,"String query = ""INSERT INTO applications (job_id, user_id, resume) VALUES ("" + jobId + "", "" + userId + "", '"" + resume + ""')"";
+statement.executeUpdate(query);
+",bad
+197,codestral_gen_197,java,"String query = ""INSERT INTO applications (job_id, user_id, resume) VALUES (?, ?, ?)"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setInt(1, jobId);
+preparedStatement.setInt(2, userId);
+preparedStatement.setString(3, resume);
+preparedStatement.executeUpdate();
+",good
+198,codestral_gen_198,java,"String query = ""SELECT * FROM songs WHERE title = '"" + title + ""'"";
+ResultSet resultSet = statement.executeQuery(query);
+",bad
+199,codestral_gen_199,java,"String query = ""SELECT * FROM songs WHERE title = ?"";
+PreparedStatement preparedStatement = connection.prepareStatement(query);
+preparedStatement.setString(1, title);
+ResultSet resultSet = preparedStatement.executeQuery();
+",good
